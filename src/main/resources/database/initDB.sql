@@ -1,0 +1,66 @@
+CREATE DATABASE IF NOT EXISTS cinema DEFAULT CHAR SET utf8;
+
+USE cinema;
+
+CREATE TABLE genres(
+    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(50) UNIQUE NOT NULL
+);
+
+CREATE TABLE movies(
+    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    genre_id INT UNSIGNED NOT NULL,
+FOREIGN KEY (genre_id) REFERENCES genres(id)
+);
+
+CREATE TABLE seat_types(
+    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    type VARCHAR(50) UNIQUE NOT NULL
+);
+
+CREATE TABLE seats(
+    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    seat_type_id INT UNSIGNED NOT NULL,
+    number INT NOT NULL,
+    FOREIGN KEY (seat_type_id) REFERENCES seat_types(id)
+);
+
+CREATE TABLE roles(
+    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    role VARCHAR(50) UNIQUE NOT NULL
+);
+
+CREATE TABLE viewers(
+    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    firstName VARCHAR(100) NOT NULL,
+    lastName VARCHAR(100) NOT NULL,
+    password VARCHAR(100) NOT NULL,
+    role_id INT UNSIGNED NOT NULL,
+    birthday DATE NOT NULL,
+    FOREIGN KEY (role_id) REFERENCES roles(id)
+);
+
+CREATE TABLE date_times(
+    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    date_time DATETIME NOT NULL
+);
+
+CREATE TABLE tickets(
+    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    movie_id INT UNSIGNED NOT NULL,
+    date_time_id INT UNSIGNED NOT NULL,
+    seat_id INT UNSIGNED NOT NULL,
+    price DOUBLE NOT NULL,
+    FOREIGN KEY (movie_id) REFERENCES movies(id),
+    FOREIGN KEY (date_time_id) REFERENCES date_times(id),
+    FOREIGN KEY (seat_id) REFERENCES seats(id)
+);
+
+CREATE TABLE viewers_movies(
+    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    viewer_id INT UNSIGNED NOT NULL,
+    movie_id INT UNSIGNED NOT NULL,
+    FOREIGN KEY (viewer_id) REFERENCES viewers(id),
+    FOREIGN KEY (movie_id) REFERENCES movies(id)
+);
