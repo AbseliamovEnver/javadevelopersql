@@ -44,7 +44,7 @@ public class Injector {
     private static TicketController ticketController = new TicketController(ticketService);
 
 
-    private static ViewerMenu viewerMenu = new ViewerMenu(viewerController, ticketController);
+    private static ViewerMenu viewerMenu = new ViewerMenu(viewerController, ticketController, genreController);
 
     private Injector() {
     }

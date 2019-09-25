@@ -1,5 +1,6 @@
 package com.abseliamov.cinema.view;
 
+import com.abseliamov.cinema.controller.GenreController;
 import com.abseliamov.cinema.controller.TicketController;
 import com.abseliamov.cinema.controller.ViewerController;
 import com.abseliamov.cinema.utils.IOUtil;
@@ -7,10 +8,13 @@ import com.abseliamov.cinema.utils.IOUtil;
 public class ViewerMenu {
     private ViewerController viewerController;
     private TicketController ticketController;
+    private GenreController genreController;
 
-    public ViewerMenu(ViewerController viewerController, TicketController ticketController) {
+    public ViewerMenu(ViewerController viewerController,
+                      TicketController ticketController, GenreController genreController) {
         this.viewerController = viewerController;
         this.ticketController = ticketController;
+        this.genreController = genreController;
     }
 
     public void authorizationMenu() {
@@ -92,6 +96,7 @@ public class ViewerMenu {
                     break;
                 case 2:
                     System.out.println("Search tickets by genre");
+                    ticketId = searchTicketByGenre();
                     break;
                 case 3:
                     System.out.println("Search tickets by date");
@@ -126,6 +131,18 @@ public class ViewerMenu {
         long ticketId = 0;
         if (ticketController.getTicketByMovieTitle(IOUtil.readString("Enter movie title: "))) {
             ticketId = IOUtil.readNumber("\nEnter ticket ID to buy or enter \'0\' for a new search: ");
+        }
+        return ticketId;
+    }
+
+    private long searchTicketByGenre() {
+        long ticketId = 0;
+        if (genreController.getAll() != null) {
+            long genreId = IOUtil.readNumber("\nEnter ID genre or \'0\' to return: ");
+            if (genreId != 0) {
+                ticketController.getTicketByGenre(genreId);
+
+            }
         }
         return ticketId;
     }

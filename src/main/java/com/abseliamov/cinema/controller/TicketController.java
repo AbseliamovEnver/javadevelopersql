@@ -12,4 +12,8 @@ public class TicketController {
     public boolean getTicketByMovieTitle(String movieTitle) {
         return ticketService.getTicketByMovieTitle(movieTitle);
     }
+
+    public boolean getTicketByGenre(long genreId) {
+        return ticketService.getTicketByGenre(genreId);
+    }
 }

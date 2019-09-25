@@ -1,8 +1,8 @@
 package com.abseliamov.cinema.model;
 
 public class GenericModel {
-private long id;
-private String name;
+    private long id;
+    private String name;
 
     public GenericModel() {
     }
@@ -34,5 +34,11 @@ private String name;
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("%-2s%-8s%-1s\n%-1s",
+                " ", getId(), getName(), "|-------|----------------|");
     }
 }
