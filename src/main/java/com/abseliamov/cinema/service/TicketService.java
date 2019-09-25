@@ -12,7 +12,8 @@ public class TicketService {
         this.ticketDao = ticketDao;
     }
 
-    public void getTicketByMovieTitle(String movieTitle) {
+    public boolean getTicketByMovieTitle(String movieTitle) {
+        boolean ticketExist = false;
         List<Ticket> ticketList = ticketDao.getTicketByMovieTitle(movieTitle);
         if (ticketList.isEmpty()) {
             System.out.println("At your request \'" + movieTitle + "\' tickets available is not found");
@@ -27,6 +28,8 @@ public class TicketService {
             System.out.println("|-------|------------------------------|---------------------|---------" +
                     "--|-------------|---------|");
             ticketList.forEach(System.out::println);
+            ticketExist = true;
         }
+        return ticketExist;
     }
 }

@@ -9,7 +9,7 @@ public class TicketController {
         this.ticketService = ticketService;
     }
 
-    public void getTicketByMovieTitle(String movieTitle) {
-        ticketService.getTicketByMovieTitle(movieTitle);
+    public boolean getTicketByMovieTitle(String movieTitle) {
+        return ticketService.getTicketByMovieTitle(movieTitle);
     }
 }

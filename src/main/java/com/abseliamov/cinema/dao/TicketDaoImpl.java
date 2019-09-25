@@ -8,9 +8,6 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.abseliamov.cinema.utils.Injector.MOVIES_TABLE;
-import static com.abseliamov.cinema.utils.Injector.TICKETS_TABLE;
-
 public class TicketDaoImpl extends AbstractDao<Ticket> {
     private Connection connection = ConnectionUtil.getConnection();
     private MovieDaoImpl movieDao;
@@ -31,11 +28,9 @@ public class TicketDaoImpl extends AbstractDao<Ticket> {
                 prepareStatement("SELECT * FROM tickets WHERE movie_id IN (" +
                         "SELECT id FROM movies WHERE movies.name = ?)")) {
             statement.setString(1, movieTitle);
-//            "SELECT * FROM " + MOVIES_TABLE + " WHERE name = ?;"
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
-
-                result = getTicketByMovieId(resultSet.getLong("id"));
+                result.add(createEntity(resultSet));
             }
         } catch (SQLException e) {
             System.out.println(e);
@@ -62,21 +57,5 @@ public class TicketDaoImpl extends AbstractDao<Ticket> {
     @Override
     public boolean delete(long id) {
         return false;
-    }
-
-    private List<Ticket> getTicketByMovieId(long movieId) {
-        List<Ticket> ticketList = new ArrayList<>();
-        try (PreparedStatement statement = connection.
-                prepareStatement("SELECT * FROM " + TICKETS_TABLE + " WHERE movie_id = ?;")) {
-            statement.setLong(1, movieId);
-            ResultSet resultSet = statement.executeQuery();
-            while (resultSet.next()) {
-                ticketList.add(createEntity(resultSet));
-            }
-        } catch (SQLException e) {
-            System.out.println(e);
-            throw new ConnectionException(e);
-        }
-        return ticketList;
     }
 }

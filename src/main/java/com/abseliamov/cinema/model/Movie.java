@@ -4,6 +4,7 @@ public class Movie extends GenericModel {
     private Genre genre;
 
     public Movie(long id, String name, Genre genre) {
+        super(id, name);
         this.genre = genre;
     }
 

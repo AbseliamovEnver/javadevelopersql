@@ -5,6 +5,7 @@ public class Seat extends GenericModel {
     private long number;
 
     public Seat(long id, SeatTypes seatTypes, long number) {
+        super(id);
         this.seatTypes = seatTypes;
         this.number = number;
     }

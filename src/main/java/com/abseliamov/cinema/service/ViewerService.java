@@ -2,12 +2,12 @@ package com.abseliamov.cinema.service;
 
 import com.abseliamov.cinema.dao.ViewerDaoImpl;
 
-public class UserService {
+public class ViewerService {
     private ViewerDaoImpl userDao;
     private static final String ERROR_NAME_OR_PASSWORD =
             "Please enter correct username and password or enter \'0\' to exit:";
 
-    public UserService(ViewerDaoImpl userDao) {
+    public ViewerService(ViewerDaoImpl userDao) {
         this.userDao = userDao;
     }
 

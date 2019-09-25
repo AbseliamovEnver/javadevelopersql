@@ -40,6 +40,25 @@ public class IOUtil {
         return data;
     }
 
+    public static long readNumber(String message) {
+        System.out.println(message);
+        long number = -1;
+        do {
+            try {
+                number = Long.parseLong(getReader().readLine());
+                if (number < 0) {
+                    System.out.println("Enter a number greater than \'0\' or \'0\' to return: ");
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Incorrect number. " + e);
+                System.out.println("Enter correct number or \'0\' for return: ");
+            } catch (IOException e) {
+                System.out.println("Error read from console " + e);
+            }
+        } while (number < 0);
+        return number;
+    }
+
     private static BufferedReader getReader() {
         return reader;
     }

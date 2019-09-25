@@ -10,6 +10,7 @@ public class Ticket extends GenericModel {
     private double price;
 
     public Ticket(long id, String movieName, LocalDateTime dateTime, Seat seat, double price) {
+        super(id);
         this.movieName = movieName;
         this.dateTime = dateTime;
         this.seat = seat;

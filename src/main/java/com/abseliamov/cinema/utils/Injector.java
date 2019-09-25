@@ -21,8 +21,8 @@ public class Injector {
     public static final String TICKETS_TABLE = "tickets";
 
     private static ViewerDaoImpl userDao = new ViewerDaoImpl(connection, VIEWERS_TABLE);
-    private static UserService userService = new UserService(userDao);
-    private static UserController userController = new UserController(userService);
+    private static ViewerService viewerService = new ViewerService(userDao);
+    private static ViewerController viewerController = new ViewerController(viewerService);
 
     private static GenreDaoImpl genreDao = new GenreDaoImpl(connection, GENRES_TABLE);
     private static GenreService genreService = new GenreService(genreDao);
@@ -44,7 +44,7 @@ public class Injector {
     private static TicketController ticketController = new TicketController(ticketService);
 
 
-    private static ViewerMenu viewerMenu = new ViewerMenu(userController, ticketController);
+    private static ViewerMenu viewerMenu = new ViewerMenu(viewerController, ticketController);
 
     private Injector() {
     }
