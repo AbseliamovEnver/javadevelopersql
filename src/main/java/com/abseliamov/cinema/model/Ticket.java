@@ -4,25 +4,25 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class Ticket extends GenericModel {
-    private String movieName;
+    private Movie movie;
     private LocalDateTime dateTime;
     private Seat seat;
     private double price;
 
-    public Ticket(long id, String movieName, LocalDateTime dateTime, Seat seat, double price) {
+    public Ticket(long id, Movie movie, LocalDateTime dateTime, Seat seat, double price) {
         super(id);
-        this.movieName = movieName;
+        this.movie = movie;
         this.dateTime = dateTime;
         this.seat = seat;
         this.price = price;
     }
 
-    public String getMovieName() {
-        return movieName;
+    public Movie getMovie() {
+        return movie;
     }
 
-    public void setMovieName(String movieName) {
-        this.movieName = movieName;
+    public void setMovie(Movie movie) {
+        this.movie = movie;
     }
 
     public LocalDateTime getDateTime() {
@@ -57,7 +57,7 @@ public class Ticket extends GenericModel {
         Ticket ticket = (Ticket) o;
 
         if (Double.compare(ticket.price, price) != 0) return false;
-        if (movieName != null ? !movieName.equals(ticket.movieName) : ticket.movieName != null) return false;
+        if (movie != null ? !movie.equals(ticket.movie) : ticket.movie != null) return false;
         if (dateTime != null ? !dateTime.equals(ticket.dateTime) : ticket.dateTime != null) return false;
         return seat != null ? seat.equals(ticket.seat) : ticket.seat == null;
 
@@ -67,7 +67,7 @@ public class Ticket extends GenericModel {
     public int hashCode() {
         int result;
         long temp;
-        result = movieName != null ? movieName.hashCode() : 0;
+        result = movie != null ? movie.hashCode() : 0;
         result = 31 * result + (dateTime != null ? dateTime.hashCode() : 0);
         result = 31 * result + (seat != null ? seat.hashCode() : 0);
         temp = Double.doubleToLongBits(price);
@@ -78,8 +78,10 @@ public class Ticket extends GenericModel {
     @Override
     public String toString() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
-        return String.format("%-2s%-8s%-31s%-22s%-16s%-11s%-1s\n%1s", " ", getId(), getMovieName(),
-                getDateTime().format(formatter), getSeat().getSeatTypes(), getSeat().getNumber(), getPrice(),
-                "|-------|------------------------------|---------------------|-----------|-------------|---------|");
+        return String.format("%-2s%-8s%-31s%-20s%-22s%-16s%-11s%-1s\n%1s",
+                " ", getId(), getMovie().getName(), getMovie().getGenre().getName(), getDateTime().format(formatter),
+                getSeat().getSeatTypes(), getSeat().getNumber(), getPrice(),
+                "|-------|------------------------------|-------------------|---------------------|" +
+                        "-----------|-------------|---------|");
     }
 }

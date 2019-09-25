@@ -22,28 +22,11 @@ public class TicketDaoImpl extends AbstractDao<Ticket> {
         this.timeDao = timeDao;
     }
 
-    public List<Ticket> getTicketByMovieTitle(String movieTitle) {
-        List<Ticket> result = new ArrayList<>();
-        try (PreparedStatement statement = connection.
-                prepareStatement("SELECT * FROM tickets WHERE movie_id IN (" +
-                        "SELECT id FROM movies WHERE movies.name = ?)")) {
-            statement.setString(1, movieTitle);
-            ResultSet resultSet = statement.executeQuery();
-            while (resultSet.next()) {
-                result.add(createEntity(resultSet));
-            }
-        } catch (SQLException e) {
-            System.out.println(e);
-            throw new ConnectionException(e);
-        }
-        return result;
-    }
-
     @Override
     public Ticket createEntity(ResultSet resultSet) throws SQLException {
         return new Ticket(
                 resultSet.getLong("id"),
-                movieDao.getById(resultSet.getLong("movie_id")).getName(),
+                movieDao.getById(resultSet.getLong("movie_id")),
                 timeDao.getById(resultSet.getLong("date_time_id")),
                 seatDao.getById(resultSet.getLong("seat_id")),
                 resultSet.getDouble("price"));
@@ -57,5 +40,39 @@ public class TicketDaoImpl extends AbstractDao<Ticket> {
     @Override
     public boolean delete(long id) {
         return false;
+    }
+
+    public List<Ticket> getTicketByMovieTitle(String movieTitle) {
+        List<Ticket> ticketList = new ArrayList<>();
+        try (PreparedStatement statement = connection
+                .prepareStatement("SELECT * FROM tickets WHERE movie_id IN (" +
+                        "SELECT id FROM movies WHERE movies.name = ?)")) {
+            statement.setString(1, movieTitle);
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                ticketList.add(createEntity(resultSet));
+            }
+        } catch (SQLException e) {
+            System.out.println(e);
+            throw new ConnectionException(e);
+        }
+        return ticketList;
+    }
+
+    public List<Ticket> getTicketByGenre(long genreId) {
+        List<Ticket> ticketList = new ArrayList<>();
+        try (PreparedStatement statement = connection
+                .prepareStatement("SELECT * FROM tickets WHERE movie_id IN(" +
+                        "SELECT id FROM movies WHERE movies.genre_id = ?)")) {
+            statement.setLong(1, genreId);
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()){
+                ticketList.add(createEntity(resultSet));
+            }
+        } catch (SQLException e) {
+            System.out.println(e);
+            throw new ConnectionException(e);
+        }
+        return ticketList;
     }
 }

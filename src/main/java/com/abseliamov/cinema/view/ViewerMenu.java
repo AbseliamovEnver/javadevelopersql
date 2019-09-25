@@ -85,7 +85,7 @@ public class ViewerMenu {
             }
             switch ((int) searchMenuItem) {
                 case 0:
-                    return 0;
+                    return -1;
                 case 1:
                     ticketId = searchTicketByMovieTitle();
                     if (ticketId != 0) {
@@ -95,11 +95,20 @@ public class ViewerMenu {
                     }
                     break;
                 case 2:
-                    System.out.println("Search tickets by genre");
                     ticketId = searchTicketByGenre();
+                    if (ticketId != 0) {
+                        return ticketId;
+                    } else {
+                        searchMenuItem = -1;
+                    }
                     break;
                 case 3:
-                    System.out.println("Search tickets by date");
+                    ticketId = searchTicketByDate();
+                    if (ticketId != 0) {
+                        return ticketId;
+                    } else {
+                        searchMenuItem = -1;
+                    }
                     break;
                 case 4:
                     System.out.println("Search tickets by seat type");
@@ -140,10 +149,17 @@ public class ViewerMenu {
         if (genreController.getAll() != null) {
             long genreId = IOUtil.readNumber("\nEnter ID genre or \'0\' to return: ");
             if (genreId != 0) {
-                ticketController.getTicketByGenre(genreId);
-
+                if (ticketController.getTicketByGenre(genreId)) {
+                    ticketId = IOUtil.readNumber("\nEnter ticket ID to buy or \'0\' to return: ");
+                }
             }
         }
         return ticketId;
+    }
+
+    private long searchTicketByDate() {
+        long ticketId = 0;
+        if ()
+        return 0;
     }
 }

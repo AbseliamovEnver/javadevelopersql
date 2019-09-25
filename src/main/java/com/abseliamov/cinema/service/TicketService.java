@@ -13,28 +13,32 @@ public class TicketService {
     }
 
     public boolean getTicketByMovieTitle(String movieTitle) {
-        boolean ticketExist = false;
         List<Ticket> ticketList = ticketDao.getTicketByMovieTitle(movieTitle);
-        if (!ticketList.isEmpty()) {
-            System.out.println("\n|--------------------------------------------------------------------" +
-                    "----------------------------|");
-            System.out.printf("%-40s%-1s\n", " ", "LIST OF TICKETS");
-            System.out.println("|----------------------------------------------------------------------" +
-                    "--------------------------|");
-            System.out.printf("%-3s%-15s%-31s%-14s%-12s%-15s%-1s\n",
-                    " ", "ID", "MOVIE TITLE", "DATE", "SEAT TYPE", "SEAT NUMBER", "PRICE");
-            System.out.println("|-------|------------------------------|---------------------|---------" +
-                    "--|-------------|---------|");
-            ticketList.forEach(System.out::println);
-            ticketExist = true;
-        } else {
-            System.out.println("At your request \'" + movieTitle + "\' tickets available is not found");
-        }
-        return ticketExist;
+        return printTicketHeader(ticketList);
     }
 
     public boolean getTicketByGenre(long genreId) {
+        List<Ticket> ticketList = ticketDao.getTicketByGenre(genreId);
+        return printTicketHeader(ticketList);
+    }
 
-        return false;
+    private boolean printTicketHeader(List<Ticket> ticketList) {
+        boolean ticketExist = false;
+        if (!ticketList.isEmpty()) {
+            System.out.println("\n|--------------------------------------------------------------------" +
+                    "------------------------------------------------|");
+            System.out.printf("%-50s%-1s\n", " ", "LIST OF TICKETS");
+            System.out.println("|----------------------------------------------------------------------" +
+                    "----------------------------------------------|");
+            System.out.printf("%-3s%-15s%-29s%-22s%-14s%-12s%-15s%-1s\n",
+                    " ", "ID", "MOVIE TITLE", "GENRE", "DATE", "SEAT TYPE", "SEAT NUMBER", "PRICE");
+            System.out.println("|-------|------------------------------|-------------------|---------------------" +
+                    "|-----------|-------------|---------|");
+            ticketList.forEach(System.out::println);
+            ticketExist = true;
+        } else {
+            System.out.println("At your request tickets available is not found");
+        }
+        return ticketExist;
     }
 }
