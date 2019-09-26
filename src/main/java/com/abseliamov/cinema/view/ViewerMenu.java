@@ -1,20 +1,28 @@
 package com.abseliamov.cinema.view;
 
-import com.abseliamov.cinema.controller.GenreController;
-import com.abseliamov.cinema.controller.TicketController;
-import com.abseliamov.cinema.controller.ViewerController;
+import com.abseliamov.cinema.controller.*;
+import com.abseliamov.cinema.model.SeatTypes;
 import com.abseliamov.cinema.utils.IOUtil;
+
+import java.util.stream.Collectors;
 
 public class ViewerMenu {
     private ViewerController viewerController;
     private TicketController ticketController;
     private GenreController genreController;
+    private DateTimeController dateTimeController;
+    private SeatController seatController;
+    private SeatTypesController seatTypesController;
 
-    public ViewerMenu(ViewerController viewerController,
-                      TicketController ticketController, GenreController genreController) {
+    public ViewerMenu(ViewerController viewerController, TicketController ticketController,
+                      GenreController genreController, DateTimeController dateTimeController,
+                      SeatController seatController, SeatTypesController seatTypesController) {
         this.viewerController = viewerController;
         this.ticketController = ticketController;
         this.genreController = genreController;
+        this.dateTimeController = dateTimeController;
+        this.seatController = seatController;
+        this.seatTypesController = seatTypesController;
     }
 
     public void authorizationMenu() {
@@ -111,7 +119,12 @@ public class ViewerMenu {
                     }
                     break;
                 case 4:
-                    System.out.println("Search tickets by seat type");
+                    ticketId = searchTicketByTypeSeat();
+                    if (ticketId != 0) {
+                        return ticketId;
+                    } else {
+                        searchMenuItem = -1;
+                    }
                     break;
                 default:
                     System.out.println("Error. Incorrect menu item.\n*********************************");
@@ -159,7 +172,27 @@ public class ViewerMenu {
 
     private long searchTicketByDate() {
         long ticketId = 0;
-        if ()
-        return 0;
+        if (dateTimeController.getAllDate() != null) {
+            long dateId = IOUtil.readNumber("\nEnter ID date or \'0\' to return: ");
+            if (dateId != 0) {
+                if (ticketController.getTicketByDate(dateId)) {
+                    ticketId = IOUtil.readNumber("\nEnter ticket ID to buy or \'0\' to return: ");
+                }
+            }
+        }
+        return ticketId;
+    }
+
+    private long searchTicketByTypeSeat() {
+        long ticketId = 0;
+        if (seatTypesController.getAllSeatType() != null) {
+            long seatTypeId = IOUtil.readNumber("\nEnter ID seat type or \'0\' to return: ");
+            if (seatTypeId != 0) {
+                if (ticketController.getTicketBySeatType(seatTypeId)) {
+                    ticketId = IOUtil.readNumber("\nEnter ticket ID to buy or \'0\' to return: ");
+                }
+            }
+        }
+        return ticketId;
     }
 }

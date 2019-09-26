@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class AbstractDao<T extends GenericModel> implements GenericDao<T> {
-    private static final String ERROR_MESSAGE = "Cannot connect to database: ";
+    private static final String ERROR_MESSAGE = "Cannot connect to database. In table: ";
     private String tableName;
     private Connection connection;
 
@@ -23,7 +23,7 @@ public abstract class AbstractDao<T extends GenericModel> implements GenericDao<
             statement.setString(1, item.getName());
             statement.executeUpdate();
         } catch (SQLException e) {
-            System.out.println(ERROR_MESSAGE + e);
+            System.out.println(ERROR_MESSAGE + tableName + ". " + e);
             throw new ConnectionException(ERROR_MESSAGE, e);
         }
     }
@@ -38,22 +38,22 @@ public abstract class AbstractDao<T extends GenericModel> implements GenericDao<
                 result = createEntity(resultSet);
             }
         } catch (SQLException e) {
-            System.out.println(ERROR_MESSAGE + e);
+            System.out.println(ERROR_MESSAGE + tableName + ". " + e);
             throw new ConnectionException(ERROR_MESSAGE, e);
         }
         return result;
     }
 
-    public List<T> getAll(){
+    public List<T> getAll() {
         List<T> result = new ArrayList<>();
         try (Statement statement = connection.createStatement();
-             ResultSet resultSet = statement.executeQuery("SELECT * FROM " + tableName)){
-            while (resultSet.next()){
+             ResultSet resultSet = statement.executeQuery("SELECT * FROM " + tableName)) {
+            while (resultSet.next()) {
                 T entity = createEntity(resultSet);
                 result.add(entity);
             }
         } catch (SQLException e) {
-            System.out.println(ERROR_MESSAGE + e);
+            System.out.println(ERROR_MESSAGE + tableName + ". " + e);
             throw new ConnectionException(ERROR_MESSAGE, e);
         }
         return result;

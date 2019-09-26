@@ -16,4 +16,12 @@ public class TicketController {
     public boolean getTicketByGenre(long genreId) {
         return ticketService.getTicketByGenre(genreId);
     }
+
+    public boolean getTicketByDate(long dateId) {
+        return ticketService.getTicketByDate(dateId);
+    }
+
+    public boolean getTicketBySeatType(long seatTypeId) {
+        return ticketService.getTicketBySeatType(seatTypeId);
+    }
 }

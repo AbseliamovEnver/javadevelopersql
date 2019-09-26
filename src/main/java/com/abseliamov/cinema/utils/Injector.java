@@ -33,18 +33,25 @@ public class Injector {
     private static MovieController movieController = new MovieController(movieService);
 
     private static SeatTypesDao seatTypesDao = new SeatTypesDao(connection, SEAT_TYPES_TABLE);
-    private static DateTimeDao timeDao = new DateTimeDao(connection, DATE_TIMES_TABLE);
+    private static SeatTypesService seatTypesService = new SeatTypesService(seatTypesDao);
+    private static SeatTypesController seatTypesController = new SeatTypesController(seatTypesService);
+
+    private static DateTimeDaoImpl timeDao = new DateTimeDaoImpl(connection, DATE_TIMES_TABLE);
 
     private static SeatDaoImpl seatDao = new SeatDaoImpl(connection, seatTypesDao, SEATS_TABLE);
     private static SeatService seatService = new SeatService(seatDao);
     private static SeatController seatController = new SeatController(seatService);
 
+    private static DateTimeDaoImpl dateTimeDao = new DateTimeDaoImpl(connection, DATE_TIMES_TABLE);
+    private static DateTimeService dateTimeService = new DateTimeService(dateTimeDao);
+    private static DateTimeController dateTimeController = new DateTimeController(dateTimeService);
+
     private static TicketDaoImpl ticketDao = new TicketDaoImpl(connection, movieDao, seatDao, timeDao, TICKETS_TABLE);
-    private static TicketService ticketService = new TicketService(ticketDao);
+    private static TicketService ticketService = new TicketService(ticketDao, dateTimeService);
     private static TicketController ticketController = new TicketController(ticketService);
 
-
-    private static ViewerMenu viewerMenu = new ViewerMenu(viewerController, ticketController, genreController);
+    private static ViewerMenu viewerMenu = new ViewerMenu(viewerController, ticketController, genreController,
+            dateTimeController, seatController, seatTypesController);
 
     private Injector() {
     }

@@ -44,4 +44,9 @@ public class Seat extends GenericModel {
         result = 31 * result + (int) (number ^ (number >>> 32));
         return result;
     }
+
+    @Override
+    public String toString() {
+        return String.format("%-2s%-8s%-1s\n%-1s", " ", getId(), getSeatTypes(), "|-------|------------|");
+    }
 }

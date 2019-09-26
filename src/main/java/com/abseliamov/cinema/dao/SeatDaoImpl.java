@@ -1,10 +1,14 @@
 package com.abseliamov.cinema.dao;
 
 import com.abseliamov.cinema.model.Seat;
+import com.abseliamov.cinema.model.SeatTypes;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class SeatDaoImpl extends AbstractDao<Seat> {
     private SeatTypesDao seatTypesDao;
