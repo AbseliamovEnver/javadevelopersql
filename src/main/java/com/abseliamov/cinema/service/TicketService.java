@@ -3,7 +3,7 @@ package com.abseliamov.cinema.service;
 import com.abseliamov.cinema.dao.TicketDaoImpl;
 import com.abseliamov.cinema.model.Ticket;
 
-import java.util.Collections;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -37,8 +37,8 @@ public class TicketService {
 
     public Ticket getById(long ticketId) {
         Ticket ticket = ticketDao.getById(ticketId);
-        List<Ticket> list = Collections.singletonList(ticket);
-        if (list.isEmpty()) {
+        List<Ticket> list = Arrays.asList(ticket);
+        if (!list.isEmpty()) {
             printTicketHeader(list);
         }
         return ticket;
@@ -46,11 +46,25 @@ public class TicketService {
 
     public boolean buyTicket(long ticketId) {
         Ticket ticket = ticketDao.getById(ticketId);
-        return ticketDao.byTicket(ticket);
+        return ticketDao.buyTicket(ticket);
     }
 
     public boolean deleteTicket(long ticketId) {
         return ticketDao.delete(ticketId);
+    }
+
+    public List<Ticket> getAllTicketViewer() {
+        List<Ticket> ticketList = ticketDao.getAllTicketViewer();
+        if (!ticketList.isEmpty()) {
+            printTicketHeader(ticketList);
+        }
+        return ticketList;
+    }
+
+    public boolean returnTicket(long ticketId) {
+        Ticket ticket = ticketDao.getOrderedTicketById(ticketId);
+        ticketDao.add(ticket);
+        return ticketDao.returnTicket(ticket);
     }
 
     private boolean printTicketHeader(List<Ticket> ticketList) {

@@ -4,6 +4,7 @@ import com.abseliamov.cinema.exceptions.ConnectionException;
 import com.abseliamov.cinema.model.Ticket;
 import com.abseliamov.cinema.utils.ConnectionUtil;
 import com.abseliamov.cinema.utils.CurrentViewer;
+import com.abseliamov.cinema.utils.Injector;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -36,6 +37,23 @@ public class TicketDaoImpl extends AbstractDao<Ticket> {
                 timeTicketDao.getById(resultSet.getLong("time_id")),
                 seatDao.getById(resultSet.getLong("seat_id")),
                 resultSet.getDouble("price"));
+    }
+
+    @Override
+    public void add(Ticket ticket) {
+        try (PreparedStatement statement = connection
+                .prepareStatement("INSERT INTO " + Injector.TICKETS_TABLE + " VALUES (?,?,?,?,?,?);")) {
+            statement.setLong(1, ticket.getId());
+            statement.setLong(2, ticket.getMovie().getId());
+            statement.setLong(3, ticket.getDate().getId());
+            statement.setLong(4, ticket.getTime().getId());
+            statement.setLong(5, ticket.getSeat().getId());
+            statement.setDouble(6, ticket.getPrice());
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println(e);
+            throw new ConnectionException(e);
+        }
     }
 
     @Override
@@ -110,7 +128,7 @@ public class TicketDaoImpl extends AbstractDao<Ticket> {
         return ticketList;
     }
 
-    public boolean byTicket(Ticket ticket) {
+    public boolean buyTicket(Ticket ticket) {
         boolean exist = false;
         try (PreparedStatement statement = connection.prepareStatement(
                 "INSERT INTO purchased_tickets(ID, TICKET_ID, VIEWER_ID, MOVIE_ID, DATE_ID, TIME_ID, SEAT_ID, PRICE) " +
@@ -128,5 +146,59 @@ public class TicketDaoImpl extends AbstractDao<Ticket> {
             e.printStackTrace();
         }
         return exist;
+    }
+
+    public List<Ticket> getAllTicketViewer() {
+        List<Ticket> ticketList = new ArrayList<>();
+        try (PreparedStatement statement = connection
+                .prepareStatement("SELECT * FROM purchased_tickets WHERE viewer_id = ?")) {
+            statement.setLong(1, currentViewer.getViewer().getId());
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                ticketList.add(createOrderedTicket(resultSet));
+            }
+        } catch (SQLException e) {
+            System.out.println(e);
+            throw new ConnectionException(e);
+        }
+        return ticketList;
+    }
+
+    public Ticket getOrderedTicketById(long ticketId) {
+        Ticket ticket = null;
+        try (PreparedStatement statement = connection
+                .prepareStatement("SELECT * FROM purchased_tickets WHERE ticket_id = ?")) {
+            statement.setLong(1, ticketId);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                ticket = createOrderedTicket(resultSet);
+            }
+        } catch (SQLException e) {
+            System.out.println(e);
+            throw new ConnectionException(e);
+        }
+        return ticket;
+    }
+
+    public boolean returnTicket(Ticket ticket) {
+        try (PreparedStatement statement = connection
+                .prepareStatement("DELETE FROM purchased_tickets WHERE ticket_id = ?")) {
+            statement.setLong(1, ticket.getId());
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println(e);
+            throw new ConnectionException(e);
+        }
+        return true;
+    }
+
+    public Ticket createOrderedTicket(ResultSet resultSet) throws SQLException {
+        return new Ticket(
+                resultSet.getLong("ticket_id"),
+                movieDao.getById(resultSet.getLong("movie_id")),
+                dateTicketDao.getById(resultSet.getLong("date_id")),
+                timeTicketDao.getById(resultSet.getLong("time_id")),
+                seatDao.getById(resultSet.getLong("seat_id")),
+                resultSet.getDouble("price"));
     }
 }

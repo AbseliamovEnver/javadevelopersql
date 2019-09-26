@@ -73,7 +73,7 @@ public class ViewerMenu {
                     }
                     break;
                 case 3:
-                    System.out.println("Return ticket");
+                    mainMenuItem = returnTicket() ? 3 : -1;
                     break;
                 case 4:
                     System.out.println("Search tickets by viewer");
@@ -226,5 +226,19 @@ public class ViewerMenu {
             buyExist = buyTicket(ticketId);
         }
         return buyExist;
+    }
+
+    private boolean returnTicket() {
+        boolean returnExist = false;
+        if (!ticketController.getAllTicketViewer().isEmpty()) {
+            long ticketId = IOUtil.readNumber("\nEnter the ticket ID to return or \'0\' to return menu: ");
+            if (ticketId != 0 && ticketController.returnTicket(ticketId)){
+                returnExist = true;
+                System.out.println("Ticket returned.");
+            }
+        } else {
+            System.out.println("List of tickets ordered is empty.");
+        }
+        return returnExist;
     }
 }

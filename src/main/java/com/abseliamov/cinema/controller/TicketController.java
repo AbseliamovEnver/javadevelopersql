@@ -3,6 +3,8 @@ package com.abseliamov.cinema.controller;
 import com.abseliamov.cinema.model.Ticket;
 import com.abseliamov.cinema.service.TicketService;
 
+import java.util.List;
+
 public class TicketController {
     private TicketService ticketService;
 
@@ -36,5 +38,13 @@ public class TicketController {
 
     public boolean deleteTicket(long ticketId) {
         return ticketService.deleteTicket(ticketId);
+    }
+
+    public List<Ticket> getAllTicketViewer() {
+        return ticketService.getAllTicketViewer();
+    }
+
+    public boolean returnTicket(long ticketId) {
+        return ticketService.returnTicket(ticketId);
     }
 }
