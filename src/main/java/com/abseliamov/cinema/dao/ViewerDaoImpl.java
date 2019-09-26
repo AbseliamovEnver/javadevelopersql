@@ -29,10 +29,12 @@ public class ViewerDaoImpl extends AbstractDao<Viewer> {
                 resultSet.getDate("birthday"));
     }
 
-    public boolean checkUserAuthorization(String name, String password) {
+    public Viewer checkUserAuthorization(String name, String password) {
         return getAll().stream()
                 .filter(viewer -> viewer.getName().equals(name))
-                .anyMatch(viewer -> viewer.getPassword().equals(password));
+                .filter(viewer -> viewer.getPassword().equals(password))
+                .findFirst()
+                .orElse(null);
     }
 
     @Override

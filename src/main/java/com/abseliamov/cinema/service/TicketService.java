@@ -3,18 +3,16 @@ package com.abseliamov.cinema.service;
 import com.abseliamov.cinema.dao.TicketDaoImpl;
 import com.abseliamov.cinema.model.Ticket;
 
-import java.time.LocalDate;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class TicketService {
     private TicketDaoImpl ticketDao;
-    private DateTimeService dateTimeService;
 
-    public TicketService(TicketDaoImpl ticketDao, DateTimeService dateTimeService) {
+    public TicketService(TicketDaoImpl ticketDao) {
         this.ticketDao = ticketDao;
-        this.dateTimeService = dateTimeService;
     }
 
     public boolean getTicketByMovieTitle(String movieTitle) {
@@ -27,15 +25,32 @@ public class TicketService {
         return printTicketHeader(ticketList);
     }
 
-    public boolean getTicketByDate(long dateId) {
-        LocalDate date = dateTimeService.getDateByDateId(dateId);
-        List<Ticket> ticketList = ticketDao.getTicketByDate(date);
+    public boolean getTicketByDateId(long dateId) {
+        List<Ticket> ticketList = ticketDao.getTicketByDateId(dateId);
         return printTicketHeader(ticketList);
     }
 
     public boolean getTicketBySeatType(long seatTypeId) {
         List<Ticket> ticketList = ticketDao.getTicketBySeatType(seatTypeId);
         return printTicketHeader(ticketList);
+    }
+
+    public Ticket getById(long ticketId) {
+        Ticket ticket = ticketDao.getById(ticketId);
+        List<Ticket> list = Collections.singletonList(ticket);
+        if (list.isEmpty()) {
+            printTicketHeader(list);
+        }
+        return ticket;
+    }
+
+    public boolean buyTicket(long ticketId) {
+        Ticket ticket = ticketDao.getById(ticketId);
+        return ticketDao.byTicket(ticket);
+    }
+
+    public boolean deleteTicket(long ticketId) {
+        return ticketDao.delete(ticketId);
     }
 
     private boolean printTicketHeader(List<Ticket> ticketList) {

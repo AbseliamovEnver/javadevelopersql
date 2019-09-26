@@ -1,18 +1,15 @@
 package com.abseliamov.cinema.model;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
 public class Ticket extends GenericModel {
     private Movie movie;
-    private LocalDate date;
-    private LocalTime time;
+    private DateTicket date;
+    private TimeTicket time;
     private Seat seat;
     private double price;
 
-    public Ticket(long id, Movie movie, LocalDate date, LocalTime time, Seat seat, double price) {
+    public Ticket(long id, Movie movie, DateTicket date, TimeTicket time, Seat seat, double price) {
         super(id);
         this.movie = movie;
         this.date = date;
@@ -29,19 +26,19 @@ public class Ticket extends GenericModel {
         this.movie = movie;
     }
 
-    public LocalDate getDate() {
+    public DateTicket getDate() {
         return date;
     }
 
-    public void setDate(LocalDate date) {
+    public void setDate(DateTicket date) {
         this.date = date;
     }
 
-    public LocalTime getTime() {
+    public TimeTicket getTime() {
         return time;
     }
 
-    public void setTime(LocalTime time) {
+    public void setTime(TimeTicket time) {
         this.time = time;
     }
 
@@ -92,10 +89,11 @@ public class Ticket extends GenericModel {
     @Override
     public String toString() {
         DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("hh:mm:ss");
+        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
         return String.format("%-2s%-8s%-31s%-20s%-13s%-11s%-16s%-11s%-1s\n%1s",
-                " ", getId(), getMovie().getName(), getMovie().getGenre().getName(), getDate().format(dateFormatter),
-                getTime().format(timeFormatter), getSeat().getSeatTypes(), getSeat().getNumber(), getPrice(),
+                " ", getId(), getMovie().getName(), getMovie().getGenre().getName(),
+                getDate().getDate().format(dateFormatter), getTime().getTime().format(timeFormatter),
+                getSeat().getSeatTypes(), getSeat().getNumber(), getPrice(),
                 "|-------|------------------------------|-------------------|------------|----------" +
                         "|-----------|-------------|---------|");
     }

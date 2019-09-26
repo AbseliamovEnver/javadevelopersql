@@ -59,5 +59,17 @@ public abstract class AbstractDao<T extends GenericModel> implements GenericDao<
         return result;
     }
 
+    public boolean delete(long id) {
+        try (PreparedStatement statement = connection
+                .prepareStatement("DELETE FROM " + tableName + " WHERE id = ?;")) {
+            statement.setLong(1, id);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println(ERROR_MESSAGE + tableName + ". " + e);
+            throw new ConnectionException(ERROR_MESSAGE, e);
+        }
+        return true;
+    }
+
     public abstract T createEntity(ResultSet resultSet) throws SQLException;
 }

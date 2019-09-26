@@ -10,6 +10,7 @@ import java.sql.Connection;
 public class Injector {
 
     private static Connection connection = ConnectionUtil.getConnection();
+    private static CurrentViewer currentViewer = CurrentViewer.getInstance();
 
     public static final String GENRES_TABLE = "genres";
     public static final String MOVIES_TABLE = "movies";
@@ -17,11 +18,12 @@ public class Injector {
     public static final String SEATS_TABLE = "seats";
     public static final String ROLES_TABLE = "roles";
     public static final String VIEWERS_TABLE = "viewers";
-    public static final String DATE_TIMES_TABLE = "date_times";
+    public static final String DATES_TABLE = "dates";
+    public static final String TIMES_TABLE = "times";
     public static final String TICKETS_TABLE = "tickets";
 
     private static ViewerDaoImpl userDao = new ViewerDaoImpl(connection, VIEWERS_TABLE);
-    private static ViewerService viewerService = new ViewerService(userDao);
+    private static ViewerService viewerService = new ViewerService(userDao, currentViewer);
     private static ViewerController viewerController = new ViewerController(viewerService);
 
     private static GenreDaoImpl genreDao = new GenreDaoImpl(connection, GENRES_TABLE);
@@ -36,22 +38,23 @@ public class Injector {
     private static SeatTypesService seatTypesService = new SeatTypesService(seatTypesDao);
     private static SeatTypesController seatTypesController = new SeatTypesController(seatTypesService);
 
-    private static DateTimeDaoImpl timeDao = new DateTimeDaoImpl(connection, DATE_TIMES_TABLE);
-
     private static SeatDaoImpl seatDao = new SeatDaoImpl(connection, seatTypesDao, SEATS_TABLE);
     private static SeatService seatService = new SeatService(seatDao);
     private static SeatController seatController = new SeatController(seatService);
 
-    private static DateTimeDaoImpl dateTimeDao = new DateTimeDaoImpl(connection, DATE_TIMES_TABLE);
-    private static DateTimeService dateTimeService = new DateTimeService(dateTimeDao);
-    private static DateTimeController dateTimeController = new DateTimeController(dateTimeService);
+    private static DateTicketDaoImpl dateTicketDaoImpl = new DateTicketDaoImpl(connection, DATES_TABLE);
+    private static DateTicketSetvice dateTicketSetvice = new DateTicketSetvice(dateTicketDaoImpl);
+    private static DateTicketController dateTicketController = new DateTicketController(dateTicketSetvice);
 
-    private static TicketDaoImpl ticketDao = new TicketDaoImpl(connection, movieDao, seatDao, timeDao, TICKETS_TABLE);
-    private static TicketService ticketService = new TicketService(ticketDao, dateTimeService);
+    private static TimeTicketDaoImpl timeTicketDaoImpl = new TimeTicketDaoImpl(connection, TIMES_TABLE);
+
+    private static TicketDaoImpl ticketDao = new TicketDaoImpl(
+            connection, currentViewer, movieDao, seatDao, dateTicketDaoImpl, timeTicketDaoImpl, TICKETS_TABLE);
+    private static TicketService ticketService = new TicketService(ticketDao);
     private static TicketController ticketController = new TicketController(ticketService);
 
     private static ViewerMenu viewerMenu = new ViewerMenu(viewerController, ticketController, genreController,
-            dateTimeController, seatController, seatTypesController);
+            dateTicketController, seatController, seatTypesController);
 
     private Injector() {
     }

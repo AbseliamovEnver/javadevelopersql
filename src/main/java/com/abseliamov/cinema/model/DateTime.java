@@ -1,32 +1,28 @@
 package com.abseliamov.cinema.model;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
-
 public class DateTime extends GenericModel {
-    private LocalDate date;
-    private LocalTime time;
+    private long date;
+    private long time;
 
-    public DateTime(long id, LocalDate date, LocalTime time) {
+    public DateTime(long id, long date, long time) {
         super(id);
         this.date = date;
         this.time = time;
     }
 
-    public LocalDate getDate() {
+    public long getDate() {
         return date;
     }
 
-    public void setDate(LocalDate date) {
+    public void setDate(long date) {
         this.date = date;
     }
 
-    public LocalTime getTime() {
+    public long getTime() {
         return time;
     }
 
-    public void setTime(LocalTime time) {
+    public void setTime(long time) {
         this.time = time;
     }
 
@@ -37,24 +33,22 @@ public class DateTime extends GenericModel {
 
         DateTime dateTime = (DateTime) o;
 
-        if (date != null ? !date.equals(dateTime.date) : dateTime.date != null) return false;
-        return time != null ? time.equals(dateTime.time) : dateTime.time == null;
+        if (date != dateTime.date) return false;
+        return time == dateTime.time;
 
     }
 
     @Override
     public int hashCode() {
-        int result = date != null ? date.hashCode() : 0;
-        result = 31 * result + (time != null ? time.hashCode() : 0);
+        int result = (int) (date ^ (date >>> 32));
+        result = 31 * result + (int) (time ^ (time >>> 32));
         return result;
     }
 
     @Override
     public String toString() {
-        DateTimeFormatter formatterDate = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-        DateTimeFormatter formatterTime = DateTimeFormatter.ofPattern("hh-mm-ss");
         return String.format("%-2s%-8s%-12s%-1s\n%1s",
-                " ", getId(), getDate().format(formatterDate), getTime().format(formatterTime),
+                " ", getId(), getDate(), getTime(),
                 "|-------|-------------|");
     }
 }
