@@ -51,4 +51,8 @@ public class TicketController {
     public List<Ticket> getAllTicketByViewerId(long viewerId) {
         return ticketService.getAllTicketByViewerId(viewerId);
     }
+
+    public Ticket getOrderedTicketById(long ticketId) {
+        return ticketService.getOrderedTicketById(ticketId);
+    }
 }

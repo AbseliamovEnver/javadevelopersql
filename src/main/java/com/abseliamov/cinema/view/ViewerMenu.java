@@ -2,6 +2,7 @@ package com.abseliamov.cinema.view;
 
 import com.abseliamov.cinema.controller.*;
 import com.abseliamov.cinema.model.Role;
+import com.abseliamov.cinema.model.Ticket;
 import com.abseliamov.cinema.utils.CurrentViewer;
 import com.abseliamov.cinema.utils.IOUtil;
 
@@ -13,10 +14,11 @@ public class ViewerMenu {
     private DateTicketController dateTicketController;
     private SeatController seatController;
     private SeatTypesController seatTypesController;
+    private MovieController movieController;
 
     public ViewerMenu(CurrentViewer currentViewer, ViewerController viewerController, TicketController ticketController,
                       GenreController genreController, DateTicketController dateTicketController,
-                      SeatController seatController, SeatTypesController seatTypesController) {
+                      SeatController seatController, SeatTypesController seatTypesController, MovieController movieController) {
         this.currentViewer = currentViewer;
         this.viewerController = viewerController;
         this.ticketController = ticketController;
@@ -24,6 +26,7 @@ public class ViewerMenu {
         this.dateTicketController = dateTicketController;
         this.seatController = seatController;
         this.seatTypesController = seatTypesController;
+        this.movieController = movieController;
     }
 
     public void authorizationMenu() {
@@ -67,7 +70,7 @@ public class ViewerMenu {
                     break;
                 case 2:
                     if (ticketId != 0) {
-                        buyTicket(ticketId);
+                        buyTicketById(ticketId);
                         ticketId = 0;
                         mainMenuItem = -1;
                     } else {
@@ -81,6 +84,10 @@ public class ViewerMenu {
                     break;
                 case 4:
                     mainMenuItem = searchTicketByViewer() ? 4 : -1;
+                    break;
+                case 5:
+                    movieController.getMovieByMaxCost();
+                    mainMenuItem = -1;
                     break;
                 default:
                     System.out.println("Error. Incorrect menu item.\n*********************************");
@@ -202,12 +209,14 @@ public class ViewerMenu {
         return ticketId;
     }
 
-    private boolean buyTicket(long ticketId) {
+    private boolean buyTicketById(long ticketId) {
         boolean buyExist = false;
-        if (ticketId != 0 && ticketController.getById(ticketId) != null) {
+        Ticket ticket;
+        if (ticketId != 0 && (ticket = ticketController.getById(ticketId)) != null) {
             long ticketConfirm = IOUtil.readNumber("\nEnter the ticket ID to confirm the purchase or \'0\' to return: ");
             if (ticketId == ticketConfirm) {
-                if (ticketController.buyTicket(ticketId) && ticketController.deleteTicket(ticketId)) {
+                if (ticketController.buyTicket(ticketId) && ticketController.deleteTicket(ticketId)
+                        && movieController.increaseCostMovie(ticket.getPrice(), ticket.getMovie())) {
                     System.out.println("Thanks for your purchase\n");
                     buyExist = true;
                 } else {
@@ -227,18 +236,23 @@ public class ViewerMenu {
         boolean buyExist = false;
         long ticketId = IOUtil.readNumber("\nPlease enter the ticket ID or \'0\' to go to the search: ");
         if (ticketId != 0) {
-            buyExist = buyTicket(ticketId);
+            buyExist = buyTicketById(ticketId);
         }
         return buyExist;
     }
 
     private boolean returnTicket() {
         boolean returnExist = false;
+        Ticket ticket;
         if (!ticketController.getAllTicketViewer().isEmpty()) {
             long ticketId = IOUtil.readNumber("\nEnter the ticket ID to return or \'0\' to return menu: ");
-            if (ticketId != 0 && ticketController.returnTicket(ticketId)) {
-                returnExist = true;
-                System.out.println("Ticket returned.");
+            if (ticketId != 0 && (ticket = ticketController.getOrderedTicketById(ticketId)) != null) {
+                long ticketConfirm = IOUtil.readNumber("\nEnter ticket ID to confirm return the ticket or \'0\' to return: ");
+                if (ticketId == ticketConfirm && ticketController.returnTicket(ticketId)
+                        && movieController.reduceCostMovie(ticket.getPrice(), ticket.getMovie())) {
+                    returnExist = true;
+                    System.out.println("Ticket returned.");
+                }
             }
         } else {
             System.out.println("List of tickets ordered is empty.");

@@ -11,6 +11,7 @@ CREATE TABLE movies(
     id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
     genre_id INT UNSIGNED NOT NULL,
+    cost DOUBLE,
 FOREIGN KEY (genre_id) REFERENCES genres(id)
 );
 

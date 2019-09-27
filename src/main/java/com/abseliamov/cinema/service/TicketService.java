@@ -42,6 +42,13 @@ public class TicketService {
         return ticket;
     }
 
+    public Ticket getOrderedTicketById(long ticketId){
+        Ticket ticket = ticketDao.getOrderedTicketById(ticketId);
+        List<Ticket> list = Arrays.asList(ticket);
+        printTicketHeader(list);
+        return ticket;
+    }
+
     public boolean buyTicket(long ticketId) {
         Ticket ticket = ticketDao.getById(ticketId);
         return ticketDao.buyTicket(ticket);

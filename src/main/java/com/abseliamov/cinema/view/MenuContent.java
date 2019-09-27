@@ -27,6 +27,7 @@ public class MenuContent {
         mainMenu.add("Buy ticket");
         mainMenu.add("Return ticket");
         mainMenu.add("Search tickets by viewer");
+        mainMenu.add("Test request");
         mainMenu.add("Exit");
 
         searchMenu.add("SEARCH MENU");
