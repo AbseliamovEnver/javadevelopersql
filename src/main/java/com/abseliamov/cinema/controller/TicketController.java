@@ -47,4 +47,8 @@ public class TicketController {
     public boolean returnTicket(long ticketId) {
         return ticketService.returnTicket(ticketId);
     }
+
+    public List<Ticket> getAllTicketByViewerId(long viewerId) {
+        return ticketService.getAllTicketByViewerId(viewerId);
+    }
 }

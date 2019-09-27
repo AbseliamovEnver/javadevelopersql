@@ -192,6 +192,22 @@ public class TicketDaoImpl extends AbstractDao<Ticket> {
         return true;
     }
 
+    public List<Ticket> getAllTicketByViewerId(long viewerId) {
+        List<Ticket> ticketList = new ArrayList<>();
+        try (PreparedStatement statement = connection
+        .prepareStatement("select * FROM purchased_tickets WHERE viewer_id = ?")){
+            statement.setLong(1, viewerId);
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()){
+                ticketList.add(createOrderedTicket(resultSet));
+            }
+        } catch (SQLException e) {
+            System.out.println(e);
+            throw new ConnectionException(e);
+        }
+        return ticketList;
+    }
+
     public Ticket createOrderedTicket(ResultSet resultSet) throws SQLException {
         return new Ticket(
                 resultSet.getLong("ticket_id"),

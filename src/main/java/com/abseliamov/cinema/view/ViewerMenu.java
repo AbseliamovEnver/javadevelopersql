@@ -1,9 +1,12 @@
 package com.abseliamov.cinema.view;
 
 import com.abseliamov.cinema.controller.*;
+import com.abseliamov.cinema.model.Role;
+import com.abseliamov.cinema.utils.CurrentViewer;
 import com.abseliamov.cinema.utils.IOUtil;
 
 public class ViewerMenu {
+    private CurrentViewer currentViewer;
     private ViewerController viewerController;
     private TicketController ticketController;
     private GenreController genreController;
@@ -11,9 +14,10 @@ public class ViewerMenu {
     private SeatController seatController;
     private SeatTypesController seatTypesController;
 
-    public ViewerMenu(ViewerController viewerController, TicketController ticketController,
+    public ViewerMenu(CurrentViewer currentViewer, ViewerController viewerController, TicketController ticketController,
                       GenreController genreController, DateTicketController dateTicketController,
                       SeatController seatController, SeatTypesController seatTypesController) {
+        this.currentViewer = currentViewer;
         this.viewerController = viewerController;
         this.ticketController = ticketController;
         this.genreController = genreController;
@@ -76,7 +80,7 @@ public class ViewerMenu {
                     mainMenuItem = returnTicket() ? 3 : -1;
                     break;
                 case 4:
-                    System.out.println("Search tickets by viewer");
+                    mainMenuItem = searchTicketByViewer() ? 4 : -1;
                     break;
                 default:
                     System.out.println("Error. Incorrect menu item.\n*********************************");
@@ -232,7 +236,7 @@ public class ViewerMenu {
         boolean returnExist = false;
         if (!ticketController.getAllTicketViewer().isEmpty()) {
             long ticketId = IOUtil.readNumber("\nEnter the ticket ID to return or \'0\' to return menu: ");
-            if (ticketId != 0 && ticketController.returnTicket(ticketId)){
+            if (ticketId != 0 && ticketController.returnTicket(ticketId)) {
                 returnExist = true;
                 System.out.println("Ticket returned.");
             }
@@ -240,5 +244,20 @@ public class ViewerMenu {
             System.out.println("List of tickets ordered is empty.");
         }
         return returnExist;
+    }
+
+    private boolean searchTicketByViewer() {
+        boolean ticketExist = false;
+        if (currentViewer.getViewer().getRole() == Role.ADMIN) {
+            viewerController.getAll();
+            long viewerId = IOUtil.readNumber("\nEnter viewer ID or \'0\' to return menu: ");
+            if (viewerId != 0) {
+                ticketController.getAllTicketByViewerId(viewerId);
+                ticketExist = true;
+            }
+        } else {
+            System.out.println("Not enough rights for this menu.");
+        }
+        return ticketExist;
     }
 }

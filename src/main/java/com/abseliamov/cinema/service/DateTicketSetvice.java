@@ -16,7 +16,6 @@ public class DateTicketSetvice {
     }
 
     public List<DateTicket> getAllDate(){
-
         List<DateTicket> dates = dateTicketDao.getAll();
         if (!dates.isEmpty()) {
             System.out.println("\n|------------------------------------|");

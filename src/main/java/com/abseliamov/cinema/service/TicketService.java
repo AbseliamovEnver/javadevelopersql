@@ -38,9 +38,7 @@ public class TicketService {
     public Ticket getById(long ticketId) {
         Ticket ticket = ticketDao.getById(ticketId);
         List<Ticket> list = Arrays.asList(ticket);
-        if (!list.isEmpty()) {
-            printTicketHeader(list);
-        }
+        printTicketHeader(list);
         return ticket;
     }
 
@@ -55,9 +53,7 @@ public class TicketService {
 
     public List<Ticket> getAllTicketViewer() {
         List<Ticket> ticketList = ticketDao.getAllTicketViewer();
-        if (!ticketList.isEmpty()) {
-            printTicketHeader(ticketList);
-        }
+        printTicketHeader(ticketList);
         return ticketList;
     }
 
@@ -65,6 +61,12 @@ public class TicketService {
         Ticket ticket = ticketDao.getOrderedTicketById(ticketId);
         ticketDao.add(ticket);
         return ticketDao.returnTicket(ticket);
+    }
+
+    public List<Ticket> getAllTicketByViewerId(long viewerId) {
+        List<Ticket> ticketList = ticketDao.getAllTicketByViewerId(viewerId);
+        printTicketHeader(ticketList);
+        return ticketList;
     }
 
     private boolean printTicketHeader(List<Ticket> ticketList) {

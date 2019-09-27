@@ -1,6 +1,9 @@
 package com.abseliamov.cinema.controller;
 
+import com.abseliamov.cinema.model.Viewer;
 import com.abseliamov.cinema.service.ViewerService;
+
+import java.util.List;
 
 public class ViewerController {
     private ViewerService viewerService;
@@ -11,5 +14,9 @@ public class ViewerController {
 
     public boolean authorization(String name, String password) {
         return viewerService.authorization(name, password);
+    }
+
+    public List<Viewer> getAll() {
+        return viewerService.getAll();
     }
 }

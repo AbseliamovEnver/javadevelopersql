@@ -53,8 +53,8 @@ public class Injector {
     private static TicketService ticketService = new TicketService(ticketDao);
     private static TicketController ticketController = new TicketController(ticketService);
 
-    private static ViewerMenu viewerMenu = new ViewerMenu(viewerController, ticketController, genreController,
-            dateTicketController, seatController, seatTypesController);
+    private static ViewerMenu viewerMenu = new ViewerMenu(currentViewer, viewerController, ticketController,
+            genreController, dateTicketController, seatController, seatTypesController);
 
     private Injector() {
     }

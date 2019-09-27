@@ -84,4 +84,11 @@ public class Viewer extends GenericModel {
         result = 31 * result + (birthday != null ? birthday.hashCode() : 0);
         return result;
     }
+
+    @Override
+    public String toString() {
+        return String.format("%-2s%-8s%-22s%-24s%-14s%-1s\n%-1s",
+                " ", getId(), getName(), getLastName(), getRole(), getBirthday(),
+                "|-------|---------------------|----------------------|--------------|--------------|");
+    }
 }
