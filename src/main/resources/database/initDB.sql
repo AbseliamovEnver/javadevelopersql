@@ -44,12 +44,12 @@ CREATE TABLE viewers(
 
 CREATE TABLE dates(
     id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    date_ticket DATETIME NOT NULL
+    date_ticket DATE NOT NULL
 );
 
 CREATE TABLE times(
     id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    time_ticket DATETIME NOT NULL
+    time_ticket TIME NOT NULL
 );
 
 CREATE TABLE tickets(

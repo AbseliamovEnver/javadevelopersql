@@ -80,21 +80,18 @@ INSERT INTO viewers(firstName, lastName, password, role_id, birthday) VALUES
 ('admin', 'Sidorov', 'admin', 1, STR_TO_DATE('01-01-1970', '%d-%m-%Y'));
 
 INSERT INTO dates (date_ticket) VALUES
-(STR_TO_DATE('01-10-2019', '%d-%m-%Y')),
+(STR_TO_DATE('01-09-2019', '%d-%m-%Y')),
 (STR_TO_DATE('02-10-2019', '%d-%m-%Y')),
-(STR_TO_DATE('03-10-2019', '%d-%m-%Y')),
-(STR_TO_DATE('04-10-2019', '%d-%m-%Y')),
-(STR_TO_DATE('05-10-2019', '%d-%m-%Y')),
-(STR_TO_DATE('06-10-2019', '%d-%m-%Y')),
-(STR_TO_DATE('07-10-2019', '%d-%m-%Y')),
-(STR_TO_DATE('08-10-2019', '%d-%m-%Y')),
-(STR_TO_DATE('09-10-2019', '%d-%m-%Y')),
-(STR_TO_DATE('10-10-2019', '%d-%m-%Y')),
-(STR_TO_DATE('11-10-2019', '%d-%m-%Y')),
-(STR_TO_DATE('12-10-2019', '%d-%m-%Y')),
-(STR_TO_DATE('13-10-2019', '%d-%m-%Y')),
-(STR_TO_DATE('14-10-2019', '%d-%m-%Y')),
-(STR_TO_DATE('15-10-2019', '%d-%m-%Y'));
+(STR_TO_DATE('03-11-2019', '%d-%m-%Y')),
+(STR_TO_DATE('04-12-2019', '%d-%m-%Y')),
+(STR_TO_DATE('05-01-2019', '%d-%m-%Y')),
+(STR_TO_DATE('06-02-2019', '%d-%m-%Y')),
+(STR_TO_DATE('07-03-2019', '%d-%m-%Y')),
+(STR_TO_DATE('08-04-2019', '%d-%m-%Y')),
+(STR_TO_DATE('09-05-2019', '%d-%m-%Y')),
+(STR_TO_DATE('10-06-2019', '%d-%m-%Y')),
+(STR_TO_DATE('11-07-2019', '%d-%m-%Y')),
+(STR_TO_DATE('12-08-2019', '%d-%m-%Y'));
 
 INSERT INTO times (time_ticket) VALUES
 (STR_TO_DATE('09:00:00', '%H:%i:%s')),
@@ -138,9 +135,9 @@ INSERT INTO tickets(movie_id, date_id, time_id, seat_id, price) VALUES
 (11, 11, 5, 9, 2.0),
 (12, 12, 6, 10, 2.0),
 
-(13, 13, 1, 1, 2.5),
-(14, 14, 2, 2, 2.5),
-(15, 15, 3, 3, 2.5),
+(13, 12, 1, 1, 2.5),
+(14, 11, 2, 2, 2.5),
+(15, 10, 3, 3, 2.5),
 (16, 1, 4, 4, 2.5),
 (17, 2, 5, 5, 2.5),
 (18, 3, 6, 6, 1.0),
