@@ -3,7 +3,6 @@ package com.abseliamov.cinema.dao;
 import com.abseliamov.cinema.model.Movie;
 import com.abseliamov.cinema.utils.ConnectionUtil;
 
-import javax.swing.plaf.synth.SynthOptionPaneUI;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -50,14 +49,15 @@ public class MovieDaoImpl extends AbstractDao<Movie> {
     public List<Movie> requestMovie() {
         List<Movie> movies = new ArrayList<>();
         try (Statement statement = connection.createStatement();
-//             ResultSet resultSet = statement.executeQuery("SELECT * FROM movies WHERE cost = (SELECT MAX(cost) FROM movies);")) {
              ResultSet resultSet = statement.executeQuery("SELECT * FROM purchased_tickets WHERE movie_id IN (" +
                      "SELECT movie_id FROM purchased_tickets WHERE date_id IN (" +
                      "        SELECT id FROM dates WHERE QUARTER(date_ticket) = QUARTER(CURDATE()))) GROUP BY movie_id;")) {
             System.out.printf("%-1s%-10s%-10s%-1s\n", " ", "movie_id", "date_id", "price");
             while (resultSet.next()) {
-//                movies.add(createEntity(resultSet));
                 System.out.printf("%-1s%-10s%-10s%-1s\n", " ",
+//                        resultSet.getLong("id"),
+//                        resultSet.getString("genre"),
+//                        resultSet.getDouble("cost"));
                         resultSet.getLong("movie_id"),
                         resultSet.getLong("date_id"),
                         resultSet.getDouble("price"));

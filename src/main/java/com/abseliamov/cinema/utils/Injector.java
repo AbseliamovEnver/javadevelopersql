@@ -18,8 +18,6 @@ public class Injector {
     public static final String SEATS_TABLE = "seats";
     public static final String ROLES_TABLE = "roles";
     public static final String VIEWERS_TABLE = "viewers";
-    public static final String DATES_TABLE = "dates";
-    public static final String TIMES_TABLE = "times";
     public static final String TICKETS_TABLE = "tickets";
 
     private static ViewerDaoImpl userDao = new ViewerDaoImpl(connection, VIEWERS_TABLE);
@@ -42,19 +40,13 @@ public class Injector {
     private static SeatService seatService = new SeatService(seatDao);
     private static SeatController seatController = new SeatController(seatService);
 
-    private static DateTicketDaoImpl dateTicketDaoImpl = new DateTicketDaoImpl(connection, DATES_TABLE);
-    private static DateTicketSetvice dateTicketSetvice = new DateTicketSetvice(dateTicketDaoImpl);
-    private static DateTicketController dateTicketController = new DateTicketController(dateTicketSetvice);
-
-    private static TimeTicketDaoImpl timeTicketDaoImpl = new TimeTicketDaoImpl(connection, TIMES_TABLE);
-
     private static TicketDaoImpl ticketDao = new TicketDaoImpl(
-            connection, currentViewer, movieDao, seatDao, dateTicketDaoImpl, timeTicketDaoImpl, TICKETS_TABLE);
+            connection, currentViewer, movieDao, seatDao, TICKETS_TABLE);
     private static TicketService ticketService = new TicketService(ticketDao);
     private static TicketController ticketController = new TicketController(ticketService);
 
     private static ViewerMenu viewerMenu = new ViewerMenu(currentViewer, viewerController, ticketController,
-            genreController, dateTicketController, seatController, seatTypesController, movieController);
+            genreController, seatController, seatTypesController, movieController);
 
     private Injector() {
     }

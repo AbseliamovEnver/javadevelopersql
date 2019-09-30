@@ -3,7 +3,9 @@ package com.abseliamov.cinema.controller;
 import com.abseliamov.cinema.model.Ticket;
 import com.abseliamov.cinema.service.TicketService;
 
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 public class TicketController {
     private TicketService ticketService;
@@ -54,5 +56,17 @@ public class TicketController {
 
     public Ticket getOrderedTicketById(long ticketId) {
         return ticketService.getOrderedTicketById(ticketId);
+    }
+
+    public Map<LocalDate, Long> getAllDate() {
+        return ticketService.getAllDate();
+    }
+
+    public List<Ticket> getAllTicketByDate(long dateId) {
+        return ticketService.getAllTicketByDate(dateId);
+    }
+
+    public boolean checkTicketAvailable(long ticketId) {
+        return ticketService.checkTicketAvailable(ticketId);
     }
 }

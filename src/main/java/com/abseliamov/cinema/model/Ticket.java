@@ -1,21 +1,22 @@
 package com.abseliamov.cinema.model;
 
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class Ticket extends GenericModel {
+    private LocalDateTime dateTime;
     private Movie movie;
-    private DateTicket date;
-    private TimeTicket time;
     private Seat seat;
     private double price;
+    private long status;
 
-    public Ticket(long id, Movie movie, DateTicket date, TimeTicket time, Seat seat, double price) {
+    public Ticket(long id, LocalDateTime dateTime, Movie movie, Seat seat, double price, long status) {
         super(id);
+        this.dateTime = dateTime;
         this.movie = movie;
-        this.date = date;
-        this.time = time;
         this.seat = seat;
         this.price = price;
+        this.status = status;
     }
 
     public Movie getMovie() {
@@ -26,20 +27,12 @@ public class Ticket extends GenericModel {
         this.movie = movie;
     }
 
-    public DateTicket getDate() {
-        return date;
+    public LocalDateTime getDateTime() {
+        return dateTime;
     }
 
-    public void setDate(DateTicket date) {
-        this.date = date;
-    }
-
-    public TimeTicket getTime() {
-        return time;
-    }
-
-    public void setTime(TimeTicket time) {
-        this.time = time;
+    public void setDateTime(LocalDateTime dateTime) {
+        this.dateTime = dateTime;
     }
 
     public Seat getSeat() {
@@ -58,6 +51,14 @@ public class Ticket extends GenericModel {
         this.price = price;
     }
 
+    public long getStatus() {
+        return status;
+    }
+
+    public void setStatus(long status) {
+        this.status = status;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -66,9 +67,9 @@ public class Ticket extends GenericModel {
         Ticket ticket = (Ticket) o;
 
         if (Double.compare(ticket.price, price) != 0) return false;
+        if (status != ticket.status) return false;
         if (movie != null ? !movie.equals(ticket.movie) : ticket.movie != null) return false;
-        if (date != null ? !date.equals(ticket.date) : ticket.date != null) return false;
-        if (time != null ? !time.equals(ticket.time) : ticket.time != null) return false;
+        if (dateTime != null ? !dateTime.equals(ticket.dateTime) : ticket.dateTime != null) return false;
         return seat != null ? seat.equals(ticket.seat) : ticket.seat == null;
 
     }
@@ -78,11 +79,11 @@ public class Ticket extends GenericModel {
         int result;
         long temp;
         result = movie != null ? movie.hashCode() : 0;
-        result = 31 * result + (date != null ? date.hashCode() : 0);
-        result = 31 * result + (time != null ? time.hashCode() : 0);
+        result = 31 * result + (dateTime != null ? dateTime.hashCode() : 0);
         result = 31 * result + (seat != null ? seat.hashCode() : 0);
         temp = Double.doubleToLongBits(price);
         result = 31 * result + (int) (temp ^ (temp >>> 32));
+        result = 31 * result + (int) (status ^ (status >>> 32));
         return result;
     }
 
@@ -92,7 +93,7 @@ public class Ticket extends GenericModel {
         DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
         return String.format("%-2s%-8s%-31s%-20s%-13s%-11s%-16s%-11s%-1s\n%1s",
                 " ", getId(), getMovie().getName(), getMovie().getGenre().getName(),
-                getDate().getDate().format(dateFormatter), getTime().getTime().format(timeFormatter),
+                getDateTime().toLocalDate().format(dateFormatter), getDateTime().toLocalTime().format(timeFormatter),
                 getSeat().getSeatTypes(), getSeat().getNumber(), getPrice(),
                 "|-------|------------------------------|-------------------|------------|----------" +
                         "|-----------|-------------|---------|");

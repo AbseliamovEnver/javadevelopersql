@@ -6,26 +6,22 @@ import com.abseliamov.cinema.model.Ticket;
 import com.abseliamov.cinema.utils.CurrentViewer;
 import com.abseliamov.cinema.utils.IOUtil;
 
-import javax.naming.ldap.PagedResultsControl;
-
 public class ViewerMenu {
     private CurrentViewer currentViewer;
     private ViewerController viewerController;
     private TicketController ticketController;
     private GenreController genreController;
-    private DateTicketController dateTicketController;
     private SeatController seatController;
     private SeatTypesController seatTypesController;
     private MovieController movieController;
 
     public ViewerMenu(CurrentViewer currentViewer, ViewerController viewerController, TicketController ticketController,
-                      GenreController genreController, DateTicketController dateTicketController,
-                      SeatController seatController, SeatTypesController seatTypesController, MovieController movieController) {
+                      GenreController genreController, SeatController seatController,
+                      SeatTypesController seatTypesController, MovieController movieController) {
         this.currentViewer = currentViewer;
         this.viewerController = viewerController;
         this.ticketController = ticketController;
         this.genreController = genreController;
-        this.dateTicketController = dateTicketController;
         this.seatController = seatController;
         this.seatTypesController = seatTypesController;
         this.movieController = movieController;
@@ -34,8 +30,8 @@ public class ViewerMenu {
     public void authorizationMenu() {
         long authorizationMenuItem;
         IOUtil.printMenuItem(MenuContent.getAuthorizationMenu());
-        authorizationMenuItem = IOUtil.getValidLongInputData("Select AUTHORIZATION MENU item: ");
         while (true) {
+            authorizationMenuItem = IOUtil.getValidLongInputData("Select AUTHORIZATION MENU item: ");
             switch ((int) authorizationMenuItem) {
                 case 0:
                     IOUtil.printMenuHeader(MenuContent.getFooterMenu());
@@ -44,8 +40,11 @@ public class ViewerMenu {
                 case 1:
                     if (authorization()) {
                         mainMenu();
-                    } else {
-                        authorizationMenuItem = 0;
+                    }
+                    break;
+                default:
+                    if (authorizationMenuItem >= MenuContent.getAuthorizationMenu().size() - 1) {
+                        System.out.println("Enter correct menu item.");
                     }
                     break;
             }
@@ -92,7 +91,10 @@ public class ViewerMenu {
                     mainMenuItem = -1;
                     break;
                 default:
-                    System.out.println("Error. Incorrect menu item.\n*********************************");
+                    if (mainMenuItem >= MenuContent.getMainMenu().size() - 1) {
+                        mainMenuItem = -1;
+                        System.out.println("Enter correct main menu item.\n*********************************");
+                    }
                     break;
             }
         }
@@ -142,7 +144,10 @@ public class ViewerMenu {
                     }
                     break;
                 default:
-                    System.out.println("Error. Incorrect menu item.\n*********************************");
+                    if (searchMenuItem >= MenuContent.getSearchMenu().size() - 1) {
+                        searchMenuItem = -1;
+                        System.out.println("Enter correct search menu item.\n*********************************");
+                    }
                     break;
             }
         }
@@ -155,8 +160,6 @@ public class ViewerMenu {
                 String password = IOUtil.readString("Enter password: ");
                 if (viewerController.authorization(name, password)) {
                     return true;
-                } else {
-                    continue;
                 }
             } else {
                 return false;
@@ -168,18 +171,24 @@ public class ViewerMenu {
         long ticketId = 0;
         if (ticketController.getTicketByMovieTitle(IOUtil.readString("Enter movie title: "))) {
             ticketId = IOUtil.readNumber("\nEnter ticket ID to buy or enter \'0\' for a new search: ");
+            ticketId = ticketController.checkTicketAvailable(ticketId) ? ticketId : 0;
         }
         return ticketId;
     }
 
     private long searchTicketByGenre() {
         long ticketId = 0;
-        if (genreController.getAll() != null) {
+        long genreListSize;
+        if ((genreListSize = genreController.getAll().size()) != 0) {
             long genreId = IOUtil.readNumber("\nEnter ID genre or \'0\' to return: ");
-            if (genreId != 0) {
+            if (genreId != 0 && genreId < genreListSize) {
                 if (ticketController.getTicketByGenre(genreId)) {
                     ticketId = IOUtil.readNumber("\nEnter ticket ID to buy or \'0\' to return: ");
+                    ticketId = ticketController.checkTicketAvailable(ticketId) ? ticketId : 0;
                 }
+            }else {
+                System.out.println("Genre with id \'" + genreId + "\' not available.\n" +
+                        "Please try again.");
             }
         }
         return ticketId;
@@ -187,11 +196,12 @@ public class ViewerMenu {
 
     private long searchTicketByDate() {
         long ticketId = 0;
-        if (dateTicketController.getAllDate() != null) {
+        if (ticketController.getAllDate() != null) {
             long dateId = IOUtil.readNumber("\nEnter ID date or \'0\' to return: ");
             if (dateId != 0) {
-                if (ticketController.getTicketByDateId(dateId)) {
+                if (ticketController.getAllTicketByDate(dateId) != null) {
                     ticketId = IOUtil.readNumber("\nEnter ticket ID to buy or \'0\' to return: ");
+                    ticketId = ticketController.checkTicketAvailable(ticketId) ? ticketId : 0;
                 }
             }
         }
@@ -205,6 +215,7 @@ public class ViewerMenu {
             if (seatTypeId != 0) {
                 if (ticketController.getTicketBySeatType(seatTypeId)) {
                     ticketId = IOUtil.readNumber("\nEnter ticket ID to buy or \'0\' to return: ");
+                    ticketId = ticketController.checkTicketAvailable(ticketId) ? ticketId : 0;
                 }
             }
         }
@@ -217,8 +228,8 @@ public class ViewerMenu {
         if (ticketId != 0 && (ticket = ticketController.getById(ticketId)) != null) {
             long ticketConfirm = IOUtil.readNumber("\nEnter the ticket ID to confirm the purchase or \'0\' to return: ");
             if (ticketId == ticketConfirm) {
-                if (ticketController.buyTicket(ticketId) && ticketController.deleteTicket(ticketId)
-                        && movieController.increaseCostMovie(ticket.getPrice(), ticket.getMovie())) {
+                if (ticketController.buyTicket(ticketId) && movieController.increaseCostMovie(ticket.getPrice(),
+                        ticket.getMovie())) {
                     System.out.println("Thanks for your purchase\n");
                     buyExist = true;
                 } else {

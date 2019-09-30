@@ -3,9 +3,9 @@ package com.abseliamov.cinema.service;
 import com.abseliamov.cinema.dao.TicketDaoImpl;
 import com.abseliamov.cinema.model.Ticket;
 
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class TicketService {
@@ -17,35 +17,35 @@ public class TicketService {
 
     public boolean getTicketByMovieTitle(String movieTitle) {
         List<Ticket> ticketList = ticketDao.getTicketByMovieTitle(movieTitle);
-        return printTicketHeader(ticketList);
+        return printTicket(ticketList);
     }
 
     public boolean getTicketByGenre(long genreId) {
         List<Ticket> ticketList = ticketDao.getTicketByGenre(genreId);
-        return printTicketHeader(ticketList);
+        return printTicket(ticketList);
     }
 
     public boolean getTicketByDateId(long dateId) {
         List<Ticket> ticketList = ticketDao.getTicketByDateId(dateId);
-        return printTicketHeader(ticketList);
+        return printTicket(ticketList);
     }
 
     public boolean getTicketBySeatType(long seatTypeId) {
         List<Ticket> ticketList = ticketDao.getTicketBySeatType(seatTypeId);
-        return printTicketHeader(ticketList);
+        return printTicket(ticketList);
     }
 
     public Ticket getById(long ticketId) {
         Ticket ticket = ticketDao.getById(ticketId);
         List<Ticket> list = Arrays.asList(ticket);
-        printTicketHeader(list);
+        printTicket(list);
         return ticket;
     }
 
-    public Ticket getOrderedTicketById(long ticketId){
+    public Ticket getOrderedTicketById(long ticketId) {
         Ticket ticket = ticketDao.getOrderedTicketById(ticketId);
         List<Ticket> list = Arrays.asList(ticket);
-        printTicketHeader(list);
+        printTicket(list);
         return ticket;
     }
 
@@ -60,7 +60,7 @@ public class TicketService {
 
     public List<Ticket> getAllTicketViewer() {
         List<Ticket> ticketList = ticketDao.getAllTicketViewer();
-        printTicketHeader(ticketList);
+        printTicket(ticketList);
         return ticketList;
     }
 
@@ -72,11 +72,64 @@ public class TicketService {
 
     public List<Ticket> getAllTicketByViewerId(long viewerId) {
         List<Ticket> ticketList = ticketDao.getAllTicketByViewerId(viewerId);
-        printTicketHeader(ticketList);
+        printTicket(ticketList);
         return ticketList;
     }
 
-    private boolean printTicketHeader(List<Ticket> ticketList) {
+    public Map<LocalDate, Long> getAllDate() {
+        Map<LocalDate, Long> dateMap = new TreeMap<>();
+        List<Ticket> ticketList = ticketDao.getAll();
+        if (ticketList != null) {
+            for (Ticket ticket : ticketList) {
+                dateMap.put(ticket.getDateTime().toLocalDate(), ticket.getId());
+            }
+            printAllDate(dateMap);
+        } else {
+            System.out.println("Date list is empty.");
+        }
+        return dateMap;
+    }
+
+    public List<Ticket> getAllTicketByDate(long ticketId) {
+        List<Ticket> result = null;
+        List<Ticket> ticketList = ticketDao.getAll();
+        LocalDate date = ticketDao.getById(ticketId).getDateTime().toLocalDate();
+        if (ticketList != null) {
+            result = ticketList.stream()
+                    .filter(ticket -> ticket.getDateTime().toLocalDate().equals(date))
+                    .filter(ticket -> ticket.getStatus() == 0)
+                    .collect(Collectors.toList());
+            printTicket(result);
+        }
+        return result;
+    }
+
+    private void printAllDate(Map<LocalDate, Long> dateList) {
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        DateTimeFormatter weekdayFormatter = DateTimeFormatter.ofPattern("EEEE").withLocale(Locale.ENGLISH);
+        System.out.println("\n|------------------------------------|");
+        System.out.printf("%-13s%-1s\n", " ", "LIST OF DATE");
+        System.out.println("|------------------------------------|");
+        System.out.printf("%-3s%-11s%-12s%-1s\n%-1s\n", " ", "ID", "DATE", "WEEKDAY",
+                "|-------|-------------|--------------|");
+        dateList.forEach((date, ticketId) -> System.out.printf("%-2s%-8s%-15s%-1s\n%-1s\n",
+                " ", ticketId, date.format(dateFormatter), date.format(weekdayFormatter).toUpperCase(),
+                "|-------|-------------|--------------|"));
+    }
+
+    public boolean checkTicketAvailable(long ticketId) {
+        boolean ticketAvailable = false;
+        Ticket ticket = ticketDao.getById(ticketId);
+        if (ticket.getStatus() == 0) {
+            ticketAvailable = true;
+        } else {
+            System.out.println("Ticket with id \'" + ticketId + "\' not available.\n" +
+                    "Please try again.");
+        }
+        return ticketAvailable;
+    }
+
+    private boolean printTicket(List<Ticket> ticketList) {
         boolean ticketExist = false;
         if (!ticketList.isEmpty()) {
             System.out.println("\n|--------------------------------------------------------------------" +

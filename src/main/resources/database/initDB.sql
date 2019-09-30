@@ -42,44 +42,13 @@ CREATE TABLE viewers(
     FOREIGN KEY (role_id) REFERENCES roles(id)
 );
 
-CREATE TABLE dates(
-    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    date_ticket DATE NOT NULL
-);
-
-CREATE TABLE times(
-    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    time_ticket TIME NOT NULL
-);
-
 CREATE TABLE tickets(
     id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    date_time DATETIME NOT NULL,
     movie_id INT UNSIGNED NOT NULL,
-    date_id INT UNSIGNED NOT NULL,
-    time_id INT UNSIGNED NOT NULL,
     seat_id INT UNSIGNED NOT NULL,
     price DOUBLE NOT NULL,
+    buy_status INT NOT NULL,
     FOREIGN KEY (movie_id) REFERENCES movies(id),
-    FOREIGN KEY (date_id) REFERENCES dates(id),
-    FOREIGN KEY (time_id) REFERENCES times(id),
     FOREIGN KEY (seat_id) REFERENCES seats(id)
 );
-
-CREATE TABLE viewers_movies(
-    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    viewer_id INT UNSIGNED NOT NULL,
-    movie_id INT UNSIGNED NOT NULL,
-    FOREIGN KEY (viewer_id) REFERENCES viewers(id),
-    FOREIGN KEY (movie_id) REFERENCES movies(id)
-);
-
-CREATE TABLE IF NOT EXISTS purchased_tickets(
-    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    ticket_id INT UNSIGNED NOT NULL,
-    viewer_id INT UNSIGNED NOT NULL,
-    movie_id INT UNSIGNED NOT NULL,
-    date_id INT UNSIGNED NOT NULL,
-    time_id INT UNSIGNED NOT NULL,
-    seat_id INT UNSIGNED NOT NULL,
-    price DOUBLE NOT NULL
-)
