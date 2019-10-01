@@ -93,23 +93,6 @@ public class TicketDaoImpl extends AbstractDao<Ticket> {
         return ticketList;
     }
 
-    public List<Ticket> getTicketByDateId(long dateId) {
-        List<Ticket> ticketList = new ArrayList<>();
-        try (PreparedStatement statement = connection
-                .prepareStatement("SELECT * FROM tickets WHERE date_id = ? " +
-                        "AND buy_status = 0")) {
-            statement.setLong(1, dateId);
-            ResultSet resultSet = statement.executeQuery();
-            while (resultSet.next()) {
-                ticketList.add(createEntity(resultSet));
-            }
-        } catch (SQLException e) {
-            System.out.println(e);
-            throw new ConnectionException(e);
-        }
-        return ticketList;
-    }
-
     public List<Ticket> getTicketBySeatType(long seatTypeId) {
         List<Ticket> ticketList = new ArrayList<>();
         try (PreparedStatement statement = connection

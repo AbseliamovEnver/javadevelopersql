@@ -1,7 +1,9 @@
 package com.abseliamov.cinema.service;
 
 import com.abseliamov.cinema.dao.TicketDaoImpl;
+import com.abseliamov.cinema.dao.ViewerDaoImpl;
 import com.abseliamov.cinema.model.Ticket;
+import com.abseliamov.cinema.model.Viewer;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -10,9 +12,11 @@ import java.util.stream.Collectors;
 
 public class TicketService {
     private TicketDaoImpl ticketDao;
+    private ViewerDaoImpl viewerDao;
 
-    public TicketService(TicketDaoImpl ticketDao) {
+    public TicketService(TicketDaoImpl ticketDao, ViewerDaoImpl viewerDao) {
         this.ticketDao = ticketDao;
+        this.viewerDao = viewerDao;
     }
 
     public List<Ticket> getTicketByMovieTitle(String movieTitle) {
@@ -47,10 +51,6 @@ public class TicketService {
         return ticketDao.buyTicket(ticket);
     }
 
-    public boolean deleteTicket(long ticketId) {
-        return ticketDao.delete(ticketId);
-    }
-
     public List<Ticket> getAllTicketViewer() {
         List<Ticket> ticketList = ticketDao.getAllTicketViewer();
         printTicket(ticketList);
@@ -71,7 +71,13 @@ public class TicketService {
 
     public List<Ticket> getAllTicketByViewerId(long viewerId) {
         List<Ticket> ticketList = ticketDao.getAllTicketByViewerId(viewerId);
-        printTicket(ticketList);
+        Viewer viewer = viewerDao.getById(viewerId);
+        if (ticketList.size() != 0) {
+            System.out.println("List of tickets of a viewer with a name \'" + viewer.getName() + "\'.");
+            printTicket(ticketList);
+        } else {
+            System.out.println("List of tickets of a viewer with a name \'" + viewer.getName() + "\' is empty.");
+        }
         return ticketList;
     }
 
@@ -132,8 +138,7 @@ public class TicketService {
         return ticketAvailable;
     }
 
-    private boolean printTicket(List<Ticket> ticketList) {
-        boolean ticketExist = false;
+    private void printTicket(List<Ticket> ticketList) {
         if (!ticketList.isEmpty()) {
             System.out.println("\n|--------------------------------------------------------------------" +
                     "--------------------------------------------------|");
@@ -148,10 +153,8 @@ public class TicketService {
                     .sorted(Comparator.comparing(Ticket::getId))
                     .collect(Collectors.toList())
                     .forEach(System.out::println);
-            ticketExist = true;
         } else {
             System.out.println("At your request tickets available is not found");
         }
-        return ticketExist;
     }
 }

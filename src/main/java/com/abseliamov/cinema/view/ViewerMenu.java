@@ -3,6 +3,7 @@ package com.abseliamov.cinema.view;
 import com.abseliamov.cinema.controller.*;
 import com.abseliamov.cinema.model.Role;
 import com.abseliamov.cinema.model.Ticket;
+import com.abseliamov.cinema.model.Viewer;
 import com.abseliamov.cinema.utils.CurrentViewer;
 import com.abseliamov.cinema.utils.IOUtil;
 
@@ -281,12 +282,14 @@ public class ViewerMenu {
 
     private boolean searchTicketByViewer() {
         boolean ticketExist = false;
+        List<Viewer> viewerList;
         if (currentViewer.getViewer().getRole() == Role.ADMIN) {
-            viewerController.getAll();
+            viewerList = viewerController.getAll();
             long viewerId = IOUtil.readNumber("\nEnter viewer ID or \'0\' to return menu: ");
-            if (viewerId != 0) {
-                ticketController.getAllTicketByViewerId(viewerId);
-                ticketExist = true;
+            if (viewerId != 0 && confirmViewer(viewerList, viewerId)) {
+                if (ticketController.getAllTicketByViewerId(viewerId) != null) {
+                    ticketExist = true;
+                }
             }
         } else {
             System.out.println("This menu requires administrator rights\n.");
@@ -318,5 +321,16 @@ public class ViewerMenu {
     private boolean confirmTicketId(List<Ticket> ticketList, long ticketId) {
         return ticketList.stream()
                 .anyMatch(ticket -> ticket.getId() == ticketId);
+    }
+
+    private boolean confirmViewer(List<Viewer> viewers, long viewerId) {
+        boolean viewerExist = false;
+        if (viewers != null) {
+            viewerExist = viewers.stream().anyMatch(viewer -> viewer.getId() == viewerId);
+            System.out.println((viewerExist) ? "" : "Viewer with id \'" + viewerId + "\' not found.\n");
+        } else {
+            System.out.println("List viewers is empty.");
+        }
+        return viewerExist;
     }
 }

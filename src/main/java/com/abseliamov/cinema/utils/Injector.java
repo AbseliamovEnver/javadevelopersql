@@ -20,8 +20,8 @@ public class Injector {
     public static final String VIEWERS_TABLE = "viewers";
     public static final String TICKETS_TABLE = "tickets";
 
-    private static ViewerDaoImpl userDao = new ViewerDaoImpl(connection, VIEWERS_TABLE);
-    private static ViewerService viewerService = new ViewerService(userDao, currentViewer);
+    private static ViewerDaoImpl viewerDao = new ViewerDaoImpl(connection, VIEWERS_TABLE);
+    private static ViewerService viewerService = new ViewerService(viewerDao, currentViewer);
     private static ViewerController viewerController = new ViewerController(viewerService);
 
     private static GenreDaoImpl genreDao = new GenreDaoImpl(connection, GENRES_TABLE);
@@ -42,7 +42,7 @@ public class Injector {
 
     private static TicketDaoImpl ticketDao = new TicketDaoImpl(
             connection, currentViewer, movieDao, seatDao, TICKETS_TABLE);
-    private static TicketService ticketService = new TicketService(ticketDao);
+    private static TicketService ticketService = new TicketService(ticketDao, viewerDao);
     private static TicketController ticketController = new TicketController(ticketService);
 
     private static ViewerMenu viewerMenu = new ViewerMenu(currentViewer, viewerController, ticketController,

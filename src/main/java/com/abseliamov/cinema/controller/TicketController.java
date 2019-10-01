@@ -34,10 +34,6 @@ public class TicketController {
         return ticketService.buyTicket(ticketId);
     }
 
-    public boolean deleteTicket(long ticketId) {
-        return ticketService.deleteTicket(ticketId);
-    }
-
     public List<Ticket> getAllTicketViewer() {
         return ticketService.getAllTicketViewer();
     }
