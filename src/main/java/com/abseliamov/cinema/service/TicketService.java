@@ -15,24 +15,22 @@ public class TicketService {
         this.ticketDao = ticketDao;
     }
 
-    public boolean getTicketByMovieTitle(String movieTitle) {
+    public List<Ticket> getTicketByMovieTitle(String movieTitle) {
         List<Ticket> ticketList = ticketDao.getTicketByMovieTitle(movieTitle);
-        return printTicket(ticketList);
+        printTicket(ticketList);
+        return ticketList;
     }
 
-    public boolean getTicketByGenre(long genreId) {
+    public List<Ticket> getTicketByGenre(long genreId) {
         List<Ticket> ticketList = ticketDao.getTicketByGenre(genreId);
-        return printTicket(ticketList);
+        printTicket(ticketList);
+        return ticketList;
     }
 
-    public boolean getTicketByDateId(long dateId) {
-        List<Ticket> ticketList = ticketDao.getTicketByDateId(dateId);
-        return printTicket(ticketList);
-    }
-
-    public boolean getTicketBySeatType(long seatTypeId) {
+    public List<Ticket> getTicketBySeatType(long seatTypeId) {
         List<Ticket> ticketList = ticketDao.getTicketBySeatType(seatTypeId);
-        return printTicket(ticketList);
+        printTicket(ticketList);
+        return ticketList;
     }
 
     public Ticket getById(long ticketId) {
@@ -92,14 +90,18 @@ public class TicketService {
 
     public List<Ticket> getAllTicketByDate(long ticketId) {
         List<Ticket> result = null;
+        LocalDate date;
         List<Ticket> ticketList = ticketDao.getAll();
-        LocalDate date = ticketDao.getById(ticketId).getDateTime().toLocalDate();
-        if (ticketList != null) {
+        Ticket ticket = ticketDao.getById(ticketId);
+        if (ticketList != null && ticket != null) {
+            date = ticket.getDateTime().toLocalDate();
             result = ticketList.stream()
-                    .filter(ticket -> ticket.getDateTime().toLocalDate().equals(date))
-                    .filter(ticket -> ticket.getStatus() == 0)
+                    .filter(ticketItem -> ticketItem.getDateTime().toLocalDate().equals(date))
+                    .filter(ticketItem -> ticketItem.getStatus() == 0)
                     .collect(Collectors.toList());
             printTicket(result);
+        } else {
+            System.out.println("");
         }
         return result;
     }

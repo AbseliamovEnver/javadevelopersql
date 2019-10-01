@@ -14,19 +14,15 @@ public class TicketController {
         this.ticketService = ticketService;
     }
 
-    public boolean getTicketByMovieTitle(String movieTitle) {
+    public List<Ticket> getTicketByMovieTitle(String movieTitle) {
         return ticketService.getTicketByMovieTitle(movieTitle);
     }
 
-    public boolean getTicketByGenre(long genreId) {
+    public List<Ticket> getTicketByGenre(long genreId) {
         return ticketService.getTicketByGenre(genreId);
     }
 
-    public boolean getTicketByDateId(long dateId) {
-        return ticketService.getTicketByDateId(dateId);
-    }
-
-    public boolean getTicketBySeatType(long seatTypeId) {
+    public List<Ticket> getTicketBySeatType(long seatTypeId) {
         return ticketService.getTicketBySeatType(seatTypeId);
     }
 

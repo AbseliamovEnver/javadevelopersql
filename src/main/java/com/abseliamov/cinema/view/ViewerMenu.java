@@ -6,6 +6,8 @@ import com.abseliamov.cinema.model.Ticket;
 import com.abseliamov.cinema.utils.CurrentViewer;
 import com.abseliamov.cinema.utils.IOUtil;
 
+import java.util.List;
+
 public class ViewerMenu {
     private CurrentViewer currentViewer;
     private ViewerController viewerController;
@@ -168,25 +170,23 @@ public class ViewerMenu {
     }
 
     private long searchTicketByMovieTitle() {
-        long ticketId = 0;
-        if (ticketController.getTicketByMovieTitle(IOUtil.readString("Enter movie title: "))) {
-            ticketId = IOUtil.readNumber("\nEnter ticket ID to buy or enter \'0\' for a new search: ");
-            ticketId = ticketController.checkTicketAvailable(ticketId) ? ticketId : 0;
-        }
+        long ticketId;
+        String movieTitle = IOUtil.readString("Enter movie title: ");
+        List<Ticket> ticketList = ticketController.getTicketByMovieTitle(movieTitle);
+        ticketId = checkTicketAvailable(ticketList);
         return ticketId;
     }
 
     private long searchTicketByGenre() {
         long ticketId = 0;
         long genreListSize;
+        List<Ticket> ticketList;
         if ((genreListSize = genreController.getAll().size()) != 0) {
             long genreId = IOUtil.readNumber("\nEnter ID genre or \'0\' to return: ");
-            if (genreId != 0 && genreId < genreListSize) {
-                if (ticketController.getTicketByGenre(genreId)) {
-                    ticketId = IOUtil.readNumber("\nEnter ticket ID to buy or \'0\' to return: ");
-                    ticketId = ticketController.checkTicketAvailable(ticketId) ? ticketId : 0;
-                }
-            }else {
+            if (genreId != 0 && genreId <= genreListSize) {
+                ticketList = ticketController.getTicketByGenre(genreId);
+                ticketId = checkTicketAvailable(ticketList);
+            } else {
                 System.out.println("Genre with id \'" + genreId + "\' not available.\n" +
                         "Please try again.");
             }
@@ -196,13 +196,12 @@ public class ViewerMenu {
 
     private long searchTicketByDate() {
         long ticketId = 0;
+        List<Ticket> ticketList;
         if (ticketController.getAllDate() != null) {
             long dateId = IOUtil.readNumber("\nEnter ID date or \'0\' to return: ");
             if (dateId != 0) {
-                if (ticketController.getAllTicketByDate(dateId) != null) {
-                    ticketId = IOUtil.readNumber("\nEnter ticket ID to buy or \'0\' to return: ");
-                    ticketId = ticketController.checkTicketAvailable(ticketId) ? ticketId : 0;
-                }
+                ticketList = ticketController.getAllTicketByDate(dateId);
+                ticketId = checkTicketAvailable(ticketList);
             }
         }
         return ticketId;
@@ -210,13 +209,16 @@ public class ViewerMenu {
 
     private long searchTicketByTypeSeat() {
         long ticketId = 0;
-        if (seatTypesController.getAllSeatType() != null) {
+        long seatTypeListSize;
+        List<Ticket> ticketList;
+        if ((seatTypeListSize = seatTypesController.getAllSeatType().size()) != 0) {
             long seatTypeId = IOUtil.readNumber("\nEnter ID seat type or \'0\' to return: ");
-            if (seatTypeId != 0) {
-                if (ticketController.getTicketBySeatType(seatTypeId)) {
-                    ticketId = IOUtil.readNumber("\nEnter ticket ID to buy or \'0\' to return: ");
-                    ticketId = ticketController.checkTicketAvailable(ticketId) ? ticketId : 0;
-                }
+            if (seatTypeId != 0 && seatTypeId <= seatTypeListSize) {
+                ticketList = ticketController.getTicketBySeatType(seatTypeId);
+                ticketId = checkTicketAvailable(ticketList);
+            } else {
+                System.out.println("Seat type with id \'" + seatTypeId + "\' not available.\n" +
+                        "Please try again.");
             }
         }
         return ticketId;
@@ -227,7 +229,9 @@ public class ViewerMenu {
         Ticket ticket;
         if (ticketId != 0 && (ticket = ticketController.getById(ticketId)) != null) {
             long ticketConfirm = IOUtil.readNumber("\nEnter the ticket ID to confirm the purchase or \'0\' to return: ");
-            if (ticketId == ticketConfirm) {
+            if (ticketConfirm == 0){
+                return buyExist;
+            }else if (ticketId == ticketConfirm) {
                 if (ticketController.buyTicket(ticketId) && movieController.increaseCostMovie(ticket.getPrice(),
                         ticket.getMovie())) {
                     System.out.println("Thanks for your purchase\n");
@@ -286,5 +290,31 @@ public class ViewerMenu {
             System.out.println("Not enough rights for this menu.");
         }
         return ticketExist;
+    }
+
+    private long checkTicketAvailable(List<Ticket> ticketList) {
+        long ticketId = 0;
+        if (ticketList != null) {
+            ticketId = IOUtil.readNumber("\nEnter ticket ID to buy or enter \'0\' for a new search: ");
+            if (ticketId == 0) {
+                return ticketId;
+            } else {
+                ticketId = ticketController.checkTicketAvailable(ticketId) ? ticketId : 0;
+                if (ticketId != 0 && confirmTicketId(ticketList, ticketId)) {
+                    return ticketId;
+                } else if (ticketId != 0) {
+                    System.out.println("Ticket id \'" + ticketId + "\' not confirmed.\n");
+                    ticketId = 0;
+                }
+            }
+        } else {
+            System.out.println("Ticket list is empty.");
+        }
+        return ticketId;
+    }
+
+    private boolean confirmTicketId(List<Ticket> ticketList, long ticketId) {
+        return ticketList.stream()
+                .anyMatch(ticket -> ticket.getId() == ticketId);
     }
 }
