@@ -78,7 +78,7 @@ public class ViewerMenu {
                         mainMenuItem = -1;
                     } else {
                         if (!buyTicket()) {
-                            mainMenuItem = 1;
+                            mainMenuItem = -1;
                         }
                     }
                     break;
@@ -229,9 +229,9 @@ public class ViewerMenu {
         Ticket ticket;
         if (ticketId != 0 && (ticket = ticketController.getById(ticketId)) != null) {
             long ticketConfirm = IOUtil.readNumber("\nEnter the ticket ID to confirm the purchase or \'0\' to return: ");
-            if (ticketConfirm == 0){
+            if (ticketConfirm == 0) {
                 return buyExist;
-            }else if (ticketId == ticketConfirm) {
+            } else if (ticketId == ticketConfirm) {
                 if (ticketController.buyTicket(ticketId) && movieController.increaseCostMovie(ticket.getPrice(),
                         ticket.getMovie())) {
                     System.out.println("Thanks for your purchase\n");
@@ -244,14 +244,14 @@ public class ViewerMenu {
                 System.out.println("Please try again.");
             }
         } else {
-            System.out.println("Ticket with id \'" + ticketId + "\' not found.");
+            System.out.println("Ticket with id \'" + ticketId + "\' not found.\n");
         }
         return buyExist;
     }
 
     private boolean buyTicket() {
         boolean buyExist = false;
-        long ticketId = IOUtil.readNumber("\nPlease enter the ticket ID or \'0\' to go to the search: ");
+        long ticketId = IOUtil.readNumber("\nPlease enter the ticket ID or \'0\' to return: ");
         if (ticketId != 0) {
             buyExist = buyTicketById(ticketId);
         }
@@ -268,7 +268,9 @@ public class ViewerMenu {
                 if (ticketId == ticketConfirm && ticketController.returnTicket(ticketId)
                         && movieController.reduceCostMovie(ticket.getPrice(), ticket.getMovie())) {
                     returnExist = true;
-                    System.out.println("Ticket returned.");
+                    System.out.println("Ticket returned.\n");
+                } else {
+                    System.out.println("Ticket not returned.\n");
                 }
             }
         } else {
@@ -287,7 +289,7 @@ public class ViewerMenu {
                 ticketExist = true;
             }
         } else {
-            System.out.println("Not enough rights for this menu.");
+            System.out.println("This menu requires administrator rights\n.");
         }
         return ticketExist;
     }

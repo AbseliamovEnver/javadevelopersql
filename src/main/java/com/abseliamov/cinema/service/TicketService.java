@@ -35,15 +35,10 @@ public class TicketService {
 
     public Ticket getById(long ticketId) {
         Ticket ticket = ticketDao.getById(ticketId);
-        List<Ticket> list = Arrays.asList(ticket);
-        printTicket(list);
-        return ticket;
-    }
-
-    public Ticket getOrderedTicketById(long ticketId) {
-        Ticket ticket = ticketDao.getOrderedTicketById(ticketId);
-        List<Ticket> list = Arrays.asList(ticket);
-        printTicket(list);
+        if (ticket.getStatus() == 0) {
+            List<Ticket> list = Arrays.asList(ticket);
+            printTicket(list);
+        } else ticket = null;
         return ticket;
     }
 
@@ -62,9 +57,15 @@ public class TicketService {
         return ticketList;
     }
 
+    public Ticket getOrderedTicketById(long ticketId) {
+        Ticket ticket = ticketDao.getOrderedTicketById(ticketId);
+        List<Ticket> list = Arrays.asList(ticket);
+        printTicket(list);
+        return ticket;
+    }
+
     public boolean returnTicket(long ticketId) {
         Ticket ticket = ticketDao.getOrderedTicketById(ticketId);
-        ticketDao.add(ticket);
         return ticketDao.returnTicket(ticket);
     }
 

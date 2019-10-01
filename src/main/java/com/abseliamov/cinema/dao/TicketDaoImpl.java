@@ -145,7 +145,7 @@ public class TicketDaoImpl extends AbstractDao<Ticket> {
     public List<Ticket> getAllTicketViewer() {
         List<Ticket> ticketList = new ArrayList<>();
         try (PreparedStatement statement = connection
-                .prepareStatement("SELECT * FROM purchased_tickets WHERE viewer_id = ?")) {
+                .prepareStatement("SELECT * FROM tickets WHERE buy_status = ?")) {
             statement.setLong(1, currentViewer.getViewer().getId());
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
@@ -161,8 +161,10 @@ public class TicketDaoImpl extends AbstractDao<Ticket> {
     public Ticket getOrderedTicketById(long ticketId) {
         Ticket ticket = null;
         try (PreparedStatement statement = connection
-                .prepareStatement("SELECT * FROM purchased_tickets WHERE ticket_id = ?")) {
+                .prepareStatement("SELECT * FROM tickets WHERE id = ? " +
+                        "AND buy_status = ?")) {
             statement.setLong(1, ticketId);
+            statement.setLong(2, currentViewer.getViewer().getId());
             ResultSet resultSet = statement.executeQuery();
             if (resultSet.next()) {
                 ticket = createEntity(resultSet);
@@ -176,8 +178,9 @@ public class TicketDaoImpl extends AbstractDao<Ticket> {
 
     public boolean returnTicket(Ticket ticket) {
         try (PreparedStatement statement = connection
-                .prepareStatement("DELETE FROM purchased_tickets WHERE ticket_id = ?")) {
-            statement.setLong(1, ticket.getId());
+                .prepareStatement("UPDATE tickets SET buy_status = ? WHERE id = ?")) {
+            statement.setLong(1, 0);
+            statement.setLong(2, ticket.getId());
             statement.executeUpdate();
         } catch (SQLException e) {
             System.out.println(e);
