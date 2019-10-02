@@ -58,4 +58,25 @@ public class ViewerService {
             System.out.println("List viewers is empty.");
         }
     }
+
+    public List<Viewer> searchViewerMovieCountByGenre(long genreId) {
+        List<Viewer> viewers = viewerDao.searchViewerMovieCountByGenre(genreId);
+        printMovieByRequest(viewers);
+        return viewers;
+    }
+
+    private void printMovieByRequest(List<Viewer> viewers) {
+        if (!viewers.isEmpty()) {
+            System.out.println("|-----------------------------------------------|");
+            System.out.printf("%-19s%-1s\n", " ", "REQUEST RESULT");
+            System.out.println("|-----------------------------------------------|");
+            System.out.printf("%-3s%-10s%-20s%-1s\n%-1s\n", " ", "ID", "FIRST NAME", "LAST NAME",
+                    "|------|-------------------|--------------------|");
+            viewers.forEach(viewer -> System.out.printf("%-3s%-6s%-20s%-1s\n%-1s\n",
+                    " ", viewer.getId(), viewer.getName(), viewer.getLastName(),
+                    "|------|-------------------|--------------------|"));
+        } else {
+            System.out.println("At your request viewers not found");
+        }
+    }
 }

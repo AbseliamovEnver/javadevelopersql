@@ -166,18 +166,25 @@ public class ViewerMenu {
                 case 0:
                     return 0;
                 case 1:
-                    searchMostProfitableMovie();
+                    movieController.searchMostProfitableMovie();
                     requestMenuItem = -1;
                     break;
                 case 2:
-                    searchLeastProfitableMovie();
+                    movieController.searchLeastProfitableMovie();
                     requestMenuItem = -1;
                     break;
                 case 3:
-
+                    searchViewerMovieCountByGenre();
+                    requestMenuItem = -1;
                     break;
                 case 4:
-
+                    requestMenuItem = -1;
+                    break;
+                case 5:
+                    requestMenuItem = -1;
+                    break;
+                case 6:
+                    requestMenuItem = -1;
                     break;
                 default:
                     if (requestMenuItem >= MenuContent.getRequestMenu().size() - 1) {
@@ -367,11 +374,16 @@ public class ViewerMenu {
         return viewerExist;
     }
 
-    private void searchMostProfitableMovie() {
-        movieController.searchMostProfitableMovie();
-    }
-
-    private void searchLeastProfitableMovie() {
-        movieController.searchLeastProfitableMovie();
+    private void searchViewerMovieCountByGenre(){
+        long genreListSize;
+        if ((genreListSize = genreController.getAll().size()) != 0) {
+            long genreId = IOUtil.readNumber("\nEnter ID genre or \'0\' to return: ");
+            if (genreId != 0 && genreId <= genreListSize) {
+                viewerController.searchViewerMovieCountByGenre(genreId);
+            } else {
+                System.out.println("Genre with id \'" + genreId + "\' not available.\n" +
+                        "Please try again.");
+            }
+        }
     }
 }

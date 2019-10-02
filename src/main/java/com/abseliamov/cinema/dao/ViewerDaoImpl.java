@@ -2,12 +2,14 @@ package com.abseliamov.cinema.dao;
 
 import com.abseliamov.cinema.model.Role;
 import com.abseliamov.cinema.model.Viewer;
+import com.abseliamov.cinema.utils.ConnectionUtil;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ViewerDaoImpl extends AbstractDao<Viewer> {
+    Connection connection = ConnectionUtil.getConnection();
 
     public ViewerDaoImpl(Connection connection, String tableName) {
         super(connection, tableName);
@@ -45,5 +47,35 @@ public class ViewerDaoImpl extends AbstractDao<Viewer> {
     @Override
     public boolean delete(long id) {
         return false;
+    }
+
+    public List<Viewer> searchViewerMovieCountByGenre(long genreId) {
+        List<Viewer> viewers = new ArrayList<>();
+        try (PreparedStatement statement = connection.prepareStatement("" +
+                "SELECT viewers.id, viewers.firstName, viewers.lastName, COUNT(buy_status) FROM (" +
+                "    SELECT buy_status FROM tickets WHERE (QUARTER(date_time) = QUARTER(CURDATE())) " +
+                "      AND movie_id IN (SELECT id FROM movies WHERE  genre_id = ?)" +
+                "      AND buy_status <> 0 " +
+                "      GROUP BY buy_status HAVING COUNT(buy_status) > 6) AS filter " +
+                "INNER JOIN viewers " +
+                "   ON viewers.id = filter.buy_status")) {
+            statement.setLong(1, genreId);
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                if (resultSet.getLong("id") != 0) {
+                    viewers.add(createMovieByRequest(resultSet));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return viewers;
+    }
+
+    private Viewer createMovieByRequest(ResultSet resultSet) throws SQLException {
+        return new Viewer(
+                resultSet.getLong("id"),
+                resultSet.getString("firstname"),
+                resultSet.getString("lastname"));
     }
 }

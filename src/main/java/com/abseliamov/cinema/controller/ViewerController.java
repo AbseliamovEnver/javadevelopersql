@@ -19,4 +19,8 @@ public class ViewerController {
     public List<Viewer> getAll() {
         return viewerService.getAll();
     }
+
+    public List<Viewer> searchViewerMovieCountByGenre(long genreId) {
+        return viewerService.searchViewerMovieCountByGenre(genreId);
+    }
 }
