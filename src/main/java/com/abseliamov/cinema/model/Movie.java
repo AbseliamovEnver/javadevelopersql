@@ -10,6 +10,11 @@ public class Movie extends GenericModel {
         this.cost = cost;
     }
 
+    public Movie(long id, String name, double totalPrice) {
+        super(id, name);
+        this.cost = totalPrice;
+    }
+
     public Genre getGenre() {
         return genre;
     }

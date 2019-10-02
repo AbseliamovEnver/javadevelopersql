@@ -10,15 +10,19 @@ public class MovieController {
         this.movieService = movieService;
     }
 
-    public void getMovieByMaxCost(){
-        movieService.getMovieByMaxCost();
-    }
-
     public boolean increaseCostMovie(double ticketCost, Movie movie) {
         return movieService.increaseCostMovie(ticketCost, movie);
     }
 
     public boolean reduceCostMovie(double ticketCost, Movie movie) {
         return movieService.reduceCostMovie(ticketCost, movie);
+    }
+
+    public void searchMostProfitableMovie(){
+        movieService.searchMostProfitableMovie();
+    }
+
+    public void searchLeastProfitableMovie() {
+        movieService.searchLeastProfitableMovie();
     }
 }

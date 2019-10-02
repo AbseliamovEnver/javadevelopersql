@@ -12,12 +12,6 @@ public class MovieService {
         this.movieDao = movieDao;
     }
 
-    public List<Movie> getMovieByMaxCost(){
-        List<Movie> movies = movieDao.requestMovie();
-        printMovie(movies);
-        return movies;
-    }
-
     public boolean increaseCostMovie(double ticketCost, Movie movie) {
         long movieId = movie.getId();
         Movie newMovie = new Movie(movieId, movie.getName(), movie.getGenre(), movie.getCost() + ticketCost);
@@ -30,9 +24,30 @@ public class MovieService {
         return movieDao.update(movieId, newMovie);
     }
 
-    private void printMovie(List<Movie> movies){
-        System.out.printf("%-3s%-16s%-19s%-1s\n%-1s\n", " ", "ID", "NAME", "COST",
-                "|--------------------------------------------|");
-        movies.forEach(System.out::println);
+    public List<Movie> searchMostProfitableMovie() {
+        List<Movie> movies = movieDao.searchMostProfitableMovie();
+        printMovieByRequest(movies);
+        return movies;
+    }
+
+    public List<Movie> searchLeastProfitableMovie() {
+        List<Movie> movies = movieDao.searchLeastProfitableMovie();
+        printMovieByRequest(movies);
+        return movies;
+    }
+
+    private void printMovieByRequest(List<Movie> movies) {
+        if (movies.size() != 0) {
+            System.out.println("|-------------------------------------------------|");
+            System.out.printf("%-19s%-1s\n", " ", "REQUEST RESULT");
+            System.out.println("|-------------------------------------------------|");
+            System.out.printf("%-3s%-13s%-23s%-1s\n%-1s\n", " ", "ID", "MOVIE TITLE", "TOTAL COST",
+                    "|------|-----------------------------|------------|");
+            movies.forEach(movie -> System.out.printf("%-3s%-6s%-32s%-1s\n%-1s\n",
+                    " ", movie.getId(), movie.getName(), movie.getCost(),
+                    "|------|-----------------------------|------------|"));
+        }else {
+            System.out.println("At your request a movie is not found");
+        }
     }
 }

@@ -8,6 +8,7 @@ public class MenuContent {
     private static List<String> authorizationMenu  = new ArrayList<>();
     private static List<String> mainMenu = new ArrayList<>();
     private static List<String> searchMenu = new ArrayList<>();
+    private static List<String> requestMenu = new ArrayList<>();
     private static List<String> footerMenu = new ArrayList<>();
 
     private MenuContent() {
@@ -37,6 +38,16 @@ public class MenuContent {
         searchMenu.add("Search tickets by seat type");
         searchMenu.add("Exit");
 
+        requestMenu.add("REQUEST MENU");
+        requestMenu.add("Search for the most profitable movie for the current quarter");
+        requestMenu.add("Search for the least profitable movie for the current quarter");
+        requestMenu.add("Search for a viewer who has visited more than 10 films in the current quarter by the specified genre");
+        requestMenu.add("Search for viewers who attend a session between + -3 days from their birthday");
+        requestMenu.add("Search for viewers who bought tickets for the specified genre, " +
+                "for an amount greater than specified in the request, in the specified period of time");
+        requestMenu.add("Search for dates on which more than 5 viewers have a birthday");
+        requestMenu.add("Exit");
+
         footerMenu.add("**************************************");
         footerMenu.add("-= THANK FOR USING OUR APPLICATION! =-");
         footerMenu.add("****-= ENJOY WATCHING THE MOVIE =-****");
@@ -56,6 +67,10 @@ public class MenuContent {
 
     public static List<String> getSearchMenu() {
         return searchMenu;
+    }
+
+    public static List<String> getRequestMenu() {
+        return requestMenu;
     }
 
     public static List<String> getFooterMenu() {

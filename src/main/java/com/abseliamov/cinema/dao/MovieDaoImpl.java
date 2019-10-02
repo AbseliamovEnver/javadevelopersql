@@ -46,25 +46,52 @@ public class MovieDaoImpl extends AbstractDao<Movie> {
         return false;
     }
 
-    public List<Movie> requestMovie() {
+    public List<Movie> searchMostProfitableMovie() {
         List<Movie> movies = new ArrayList<>();
         try (Statement statement = connection.createStatement();
-             ResultSet resultSet = statement.executeQuery("SELECT * FROM purchased_tickets WHERE movie_id IN (" +
-                     "SELECT movie_id FROM purchased_tickets WHERE date_id IN (" +
-                     "        SELECT id FROM dates WHERE QUARTER(date_ticket) = QUARTER(CURDATE()))) GROUP BY movie_id;")) {
-            System.out.printf("%-1s%-10s%-10s%-1s\n", " ", "movie_id", "date_id", "price");
+             ResultSet resultSet = statement.executeQuery("" +
+                     "SELECT movies.id, movies.name, moviePrice.totalPrice FROM (" +
+                     "    SELECT movie_id FROM tickets WHERE (QUARTER(date_time) = QUARTER(CURDATE()))) AS date " +
+                     "RIGHT JOIN (" +
+                     "    SELECT movie_id AS moviePriceId, SUM(price) AS totalPrice FROM tickets WHERE buy_status > 0 " +
+                     "      GROUP BY movie_id HAVING MAX(totalPrice) LIMIT 1) AS moviePrice " +
+                     "ON date.movie_id = moviePrice.moviePriceId " +
+                     "INNER JOIN movies " +
+                     "ON movies.id = moviePrice.moviePriceId LIMIT 1")) {
             while (resultSet.next()) {
-                System.out.printf("%-1s%-10s%-10s%-1s\n", " ",
-//                        resultSet.getLong("id"),
-//                        resultSet.getString("genre"),
-//                        resultSet.getDouble("cost"));
-                        resultSet.getLong("movie_id"),
-                        resultSet.getLong("date_id"),
-                        resultSet.getDouble("price"));
+                movies.add(createMovieByRequest(resultSet));
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return movies;
+    }
+
+    public List<Movie> searchLeastProfitableMovie() {
+        List<Movie> movies = new ArrayList<>();
+        try (Statement statement = connection.createStatement();
+             ResultSet resultSet = statement.executeQuery("" +
+                     "SELECT movies.id, movies.name, moviePrice.totalPrice FROM (" +
+                     "    SELECT movie_id FROM tickets WHERE (QUARTER(date_time) = QUARTER(CURDATE()))) AS date " +
+                     "RIGHT JOIN (" +
+                     "    SELECT movie_id AS moviePriceId, SUM(price) AS totalPrice FROM tickets WHERE buy_status > 0 " +
+                     "      GROUP BY movie_id ORDER BY movie_id DESC LIMIT 1) AS moviePrice " +
+                     "ON date.movie_id = moviePrice.moviePriceId " +
+                     "INNER JOIN movies " +
+                     "ON movies.id = moviePrice.moviePriceId LIMIT 1")) {
+            while (resultSet.next()) {
+                movies.add(createMovieByRequest(resultSet));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return movies;
+    }
+
+    private Movie createMovieByRequest(ResultSet resultSet) throws SQLException {
+        return new Movie(
+                resultSet.getLong("id"),
+                resultSet.getString("name"),
+                resultSet.getDouble("totalPrice"));
     }
 }

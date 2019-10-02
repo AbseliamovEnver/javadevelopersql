@@ -90,8 +90,7 @@ public class ViewerMenu {
                     mainMenuItem = searchTicketByViewer() ? 4 : -1;
                     break;
                 case 5:
-                    movieController.getMovieByMaxCost();
-                    mainMenuItem = -1;
+                    mainMenuItem = requestMenu() == 0 ? -1 : 5;
                     break;
                 default:
                     if (mainMenuItem >= MenuContent.getMainMenu().size() - 1) {
@@ -150,6 +149,40 @@ public class ViewerMenu {
                     if (searchMenuItem >= MenuContent.getSearchMenu().size() - 1) {
                         searchMenuItem = -1;
                         System.out.println("Enter correct search menu item.\n*********************************");
+                    }
+                    break;
+            }
+        }
+    }
+
+    private long requestMenu() {
+        long requestMenuItem = -1;
+        while (true) {
+            if (requestMenuItem == -1) {
+                IOUtil.printMenuItem(MenuContent.getRequestMenu());
+                requestMenuItem = IOUtil.getValidLongInputData("Select REQUEST MENU item: ");
+            }
+            switch ((int) requestMenuItem) {
+                case 0:
+                    return 0;
+                case 1:
+                    searchMostProfitableMovie();
+                    requestMenuItem = -1;
+                    break;
+                case 2:
+                    searchLeastProfitableMovie();
+                    requestMenuItem = -1;
+                    break;
+                case 3:
+
+                    break;
+                case 4:
+
+                    break;
+                default:
+                    if (requestMenuItem >= MenuContent.getRequestMenu().size() - 1) {
+                        requestMenuItem = -1;
+                        System.out.println("Enter correct request menu item.\n*********************************");
                     }
                     break;
             }
@@ -332,5 +365,13 @@ public class ViewerMenu {
             System.out.println("List viewers is empty.");
         }
         return viewerExist;
+    }
+
+    private void searchMostProfitableMovie() {
+        movieController.searchMostProfitableMovie();
+    }
+
+    private void searchLeastProfitableMovie() {
+        movieController.searchLeastProfitableMovie();
     }
 }
