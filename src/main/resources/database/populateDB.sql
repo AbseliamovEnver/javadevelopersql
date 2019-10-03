@@ -72,6 +72,7 @@ INSERT INTO roles(role) VALUES
 INSERT INTO viewers(firstName, lastName, password, role_id, birthday) VALUES
 ('123', 'Ivanov', '123', 1, STR_TO_DATE('01-02-2019', '%d-%m-%Y')),
 ('root', 'Petrov', 'root', 1, STR_TO_DATE('02-03-2000', '%d-%m-%Y')),
+('user', 'User', 'user', 1, STR_TO_DATE('05-10-2019', '%d-%m-%Y')),
 ('admin', 'Sidorov', 'admin', 1, STR_TO_DATE('01-01-1970', '%d-%m-%Y'));
 
 INSERT INTO tickets(date_time, movie_id, seat_id, price, buy_status) VALUES

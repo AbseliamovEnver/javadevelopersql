@@ -5,6 +5,7 @@ import com.abseliamov.cinema.model.GenericModel;
 import com.abseliamov.cinema.model.Viewer;
 import com.abseliamov.cinema.utils.CurrentViewer;
 
+import java.text.SimpleDateFormat;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -61,22 +62,30 @@ public class ViewerService {
 
     public List<Viewer> searchViewerMovieCountByGenre(long genreId) {
         List<Viewer> viewers = viewerDao.searchViewerMovieCountByGenre(genreId);
-        printMovieByRequest(viewers);
+        printViewerByRequest(viewers);
         return viewers;
     }
 
-    private void printMovieByRequest(List<Viewer> viewers) {
+    public List<Viewer> searchViewersVisitingMovieInIntervalDaysFromBirthday() {
+        List<Viewer> viewers = viewerDao.searchViewersVisitingMovieInIntervalDaysFromBirthday();
+        printViewerByRequest(viewers);
+        return viewers;
+    }
+
+    private void printViewerByRequest(List<Viewer> viewers) {
+        SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
         if (!viewers.isEmpty()) {
-            System.out.println("|-----------------------------------------------|");
-            System.out.printf("%-19s%-1s\n", " ", "REQUEST RESULT");
-            System.out.println("|-----------------------------------------------|");
-            System.out.printf("%-3s%-10s%-20s%-1s\n%-1s\n", " ", "ID", "FIRST NAME", "LAST NAME",
-                    "|------|-------------------|--------------------|");
-            viewers.forEach(viewer -> System.out.printf("%-3s%-6s%-20s%-1s\n%-1s\n",
+            System.out.println("|------------------------------------------------------------|");
+            System.out.printf("%-27s%-1s\n", " ", "REQUEST RESULT");
+            System.out.println("|------------------------------------------------------------|");
+            System.out.printf("%-3s%-10s%-21s%-17s%-1s\n%-1s\n", " ", "ID", "FIRST NAME", "LAST NAME", "BIRTHDAY",
+                    "|------|-------------------|--------------------|------------|");
+            viewers.forEach(viewer -> System.out.printf("%-3s%-6s%-20s%-21s%-1s\n%-1s\n",
                     " ", viewer.getId(), viewer.getName(), viewer.getLastName(),
-                    "|------|-------------------|--------------------|"));
+                    formatter.format(viewer.getBirthday()),
+                    "|------|-------------------|--------------------|------------|"));
         } else {
-            System.out.println("At your request viewers not found");
+            System.out.println("At your request viewers not found\n");
         }
     }
 }

@@ -52,7 +52,7 @@ public class ViewerDaoImpl extends AbstractDao<Viewer> {
     public List<Viewer> searchViewerMovieCountByGenre(long genreId) {
         List<Viewer> viewers = new ArrayList<>();
         try (PreparedStatement statement = connection.prepareStatement("" +
-                "SELECT viewers.id, viewers.firstName, viewers.lastName, COUNT(buy_status) FROM (" +
+                "SELECT viewers.id, viewers.firstName, viewers.lastName, viewers.birthday, COUNT(buy_status) FROM (" +
                 "    SELECT buy_status FROM tickets WHERE (QUARTER(date_time) = QUARTER(CURDATE())) " +
                 "      AND movie_id IN (SELECT id FROM movies WHERE  genre_id = ?)" +
                 "      AND buy_status <> 0 " +
@@ -72,10 +72,30 @@ public class ViewerDaoImpl extends AbstractDao<Viewer> {
         return viewers;
     }
 
+    public List<Viewer> searchViewersVisitingMovieInIntervalDaysFromBirthday() {
+        List<Viewer> viewers = new ArrayList<>();
+        try (Statement statement = connection.createStatement();
+             ResultSet resultSet = statement.executeQuery("" +
+                     " SELECT viewers.id, viewers.firstName, viewers.lastName, viewers.birthday FROM tickets, viewers " +
+                     "    WHERE tickets.date_time >= CURRENT_TIME AND buy_status <> 0 " +
+                     "      AND (DAYOFYEAR(date_time) BETWEEN (DAYOFYEAR(birthday) - 3) AND DAYOFYEAR(birthday) " +
+                     "      OR DAYOFYEAR(date_time) BETWEEN DAYOFYEAR(birthday) AND (DAYOFYEAR(birthday) + 3 )) ")) {
+            while (resultSet.next()) {
+                if (resultSet.getLong("id") != 0) {
+                    viewers.add(createMovieByRequest(resultSet));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return viewers;
+    }
+
     private Viewer createMovieByRequest(ResultSet resultSet) throws SQLException {
         return new Viewer(
                 resultSet.getLong("id"),
                 resultSet.getString("firstname"),
-                resultSet.getString("lastname"));
+                resultSet.getString("lastname"),
+                resultSet.getDate("birthday"));
     }
 }

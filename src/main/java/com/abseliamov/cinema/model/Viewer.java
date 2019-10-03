@@ -11,13 +11,9 @@ public class Viewer extends GenericModel {
     public Viewer() {
     }
 
-    public Viewer(long id, String name, String lastName) {
+    public Viewer(long id, String name, String lastName, Date birthday) {
         super(id, name);
         this.lastName = lastName;
-    }
-
-    public Viewer(long id, String name, Date birthday) {
-        super(id, name);
         this.birthday = birthday;
     }
 

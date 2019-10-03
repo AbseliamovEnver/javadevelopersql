@@ -23,4 +23,8 @@ public class ViewerController {
     public List<Viewer> searchViewerMovieCountByGenre(long genreId) {
         return viewerService.searchViewerMovieCountByGenre(genreId);
     }
+
+    public List<Viewer> searchViewersVisitingMovieInIntervalDaysFromBirthday() {
+        return viewerService.searchViewersVisitingMovieInIntervalDaysFromBirthday();
+    }
 }
