@@ -7,6 +7,10 @@ import com.abseliamov.cinema.model.Viewer;
 import com.abseliamov.cinema.utils.CurrentViewer;
 import com.abseliamov.cinema.utils.IOUtil;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ViewerMenu {
@@ -182,6 +186,7 @@ public class ViewerMenu {
                     requestMenuItem = -1;
                     break;
                 case 5:
+                    searchViewerByComplexQuery();
                     requestMenuItem = -1;
                     break;
                 case 6:
@@ -375,7 +380,7 @@ public class ViewerMenu {
         return viewerExist;
     }
 
-    private void searchViewerMovieCountByGenre(){
+    private void searchViewerMovieCountByGenre() {
         long genreListSize;
         if ((genreListSize = genreController.getAll().size()) != 0) {
             long genreId = IOUtil.readNumber("\nEnter ID genre or \'0\' to return: ");
@@ -384,6 +389,65 @@ public class ViewerMenu {
             } else {
                 System.out.println("Genre with id \'" + genreId + "\' not available.\n" +
                         "Please try again.");
+            }
+        }
+    }
+
+    private void searchViewerByComplexQuery() {
+        long genreId;
+        double amount;
+        List<LocalDate> dates;
+        if ((genreId = getGenreId()) != 0){
+            amount = getAmountOfOrdersViewer();
+            if ((dates = getDatePeriod()) != null){
+                viewerController.searchViewerByComplexQuery(genreId, amount, dates);
+            }
+        }
+    }
+
+    private long getGenreId() {
+        long genreListSize;
+        long genreId = 0;
+        if ((genreListSize = genreController.getAll().size()) != 0) {
+            genreId = IOUtil.readNumber("\nEnter ID genre or \'0\' to return: ");
+            if (genreId != 0 && genreId <= genreListSize) {
+                return genreId;
+            } else {
+                System.out.println("Genre with id \'" + genreId + "\' not available.\n" +
+                        "Please try again.");
+            }
+        }
+        return genreId;
+    }
+
+    private double getAmountOfOrdersViewer() {
+        double amount;
+        amount = IOUtil.readNumber("\nEnter amount of orders from the viewer or \'0\' to return: ");
+        return amount > 0 ? amount : 0;
+    }
+
+    private List<LocalDate> getDatePeriod() {
+        List<LocalDate> dates = new ArrayList<>();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        String fromDate, toDate;
+        while (true) {
+            fromDate = IOUtil.readString("\nEnter the start date of the period in the format \'dd-MM-yyyy\' or \'0\' to return: ");
+            if (!fromDate.equals("0")) {
+                toDate = IOUtil.readString("\nEnter the end date of the period in the format \'dd-MM-yyyy\' or \'0\' to return: ");
+                try {
+                    if (!toDate.equals("0")) {
+                        LocalDate startDate = LocalDate.parse(fromDate, formatter);
+                        LocalDate endDate = LocalDate.parse(toDate, formatter);
+                        dates.add(startDate);
+                        dates.add(endDate);
+                        return dates;
+                    } else return dates;
+                } catch (DateTimeParseException e) {
+                    System.out.println("The entered date is incorrect. \n" +
+                            "Please enter the date in the correct format.");
+                }
+            } else {
+                return dates;
             }
         }
     }

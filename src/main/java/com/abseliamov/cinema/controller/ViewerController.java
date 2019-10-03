@@ -3,6 +3,7 @@ package com.abseliamov.cinema.controller;
 import com.abseliamov.cinema.model.Viewer;
 import com.abseliamov.cinema.service.ViewerService;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public class ViewerController {
@@ -26,5 +27,9 @@ public class ViewerController {
 
     public List<Viewer> searchViewersVisitingMovieInIntervalDaysFromBirthday() {
         return viewerService.searchViewersVisitingMovieInIntervalDaysFromBirthday();
+    }
+
+    public List<Viewer> searchViewerByComplexQuery(long genreId, double amount, List<LocalDate> dates) {
+        return viewerService.searchViewerByComplexQuery(genreId, amount, dates);
     }
 }

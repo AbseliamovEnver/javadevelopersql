@@ -1,6 +1,6 @@
 # Поиск зрителя, который посетил более 10 фильмов в текущем квартале по указанному жанру
 
-SELECT viewers.id, viewers.firstName, viewers.lastName, COUNT(buy_status) FROM (
+SELECT viewers.id, viewers.firstName, viewers.lastName, viewers.birthday, COUNT(buy_status) FROM (
     SELECT buy_status FROM tickets WHERE (QUARTER(date_time) = QUARTER(CURDATE()))
         AND movie_id IN (SELECT id FROM movies WHERE  genre_id = ?)
         AND buy_status <> 0

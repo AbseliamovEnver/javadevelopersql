@@ -6,6 +6,7 @@ import com.abseliamov.cinema.model.Viewer;
 import com.abseliamov.cinema.utils.CurrentViewer;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -68,6 +69,12 @@ public class ViewerService {
 
     public List<Viewer> searchViewersVisitingMovieInIntervalDaysFromBirthday() {
         List<Viewer> viewers = viewerDao.searchViewersVisitingMovieInIntervalDaysFromBirthday();
+        printViewerByRequest(viewers);
+        return viewers;
+    }
+
+    public List<Viewer> searchViewerByComplexQuery(long genreId, double amount, List<LocalDate> dates) {
+        List<Viewer> viewers = viewerDao.searchViewerByComplexQuery(genreId, amount, dates);
         printViewerByRequest(viewers);
         return viewers;
     }
