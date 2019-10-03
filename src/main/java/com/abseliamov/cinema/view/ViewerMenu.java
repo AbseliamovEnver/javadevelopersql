@@ -431,9 +431,9 @@ public class ViewerMenu {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
         String fromDate, toDate;
         while (true) {
-            fromDate = IOUtil.readString("\nEnter the start date of the period in the format \'dd-MM-yyyy\' or \'0\' to return: ");
+            fromDate = IOUtil.readString("\nEnter the START date of the period in the format \'dd-MM-yyyy\' or \'0\' to return: ");
             if (!fromDate.equals("0")) {
-                toDate = IOUtil.readString("\nEnter the end date of the period in the format \'dd-MM-yyyy\' or \'0\' to return: ");
+                toDate = IOUtil.readString("\nEnter the END date of the period in the format \'dd-MM-yyyy\' or \'0\' to return: ");
                 try {
                     if (!toDate.equals("0")) {
                         LocalDate startDate = LocalDate.parse(fromDate, formatter);

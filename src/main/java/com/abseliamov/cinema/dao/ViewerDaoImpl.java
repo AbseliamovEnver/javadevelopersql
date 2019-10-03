@@ -98,13 +98,14 @@ public class ViewerDaoImpl extends AbstractDao<Viewer> {
                 " SELECT viewers.id, viewers.firstName, viewers.lastName, viewers.birthday FROM ( " +
                 "SELECT buy_status FROM tickets WHERE movie_id IN (SELECT id FROM movies WHERE  genre_id = ?) " +
                 "AND buy_status <> 0 " +
+                "AND date_time BETWEEN ? AND ? " +
                 "GROUP BY buy_status HAVING SUM(price) > ?) AS filter " +
                 "INNER JOIN viewers " +
                 "    ON viewers.id = filter.buy_status;")) {
             statement.setLong(1, genreId);
-            statement.setDouble(2, amount);
-//            statement.setDate(3, Date.valueOf(dates.get(1)));
-//            statement.setDate(4, Date.valueOf(dates.get(2)));
+            statement.setDate(2, Date.valueOf(dates.get(0)));
+            statement.setDate(3, Date.valueOf(dates.get(1)));
+            statement.setDouble(4, amount);
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 if (resultSet.getLong("id") != 0) {
