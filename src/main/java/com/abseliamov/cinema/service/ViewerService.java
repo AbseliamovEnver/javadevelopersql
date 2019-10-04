@@ -4,11 +4,14 @@ import com.abseliamov.cinema.dao.ViewerDaoImpl;
 import com.abseliamov.cinema.model.GenericModel;
 import com.abseliamov.cinema.model.Viewer;
 import com.abseliamov.cinema.utils.CurrentViewer;
+import com.google.common.collect.Multimap;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class ViewerService {
@@ -79,6 +82,12 @@ public class ViewerService {
         return viewers;
     }
 
+    public Multimap<String, Viewer> searchDateWithSeveralViewersBirthday() {
+        Multimap<String, Viewer> localDateListMap = viewerDao.searchDateWithSeveralViewersBirthday();
+        printMapWithListBirthday(localDateListMap);
+        return localDateListMap;
+    }
+
     private void printViewerByRequest(List<Viewer> viewers) {
         SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
         if (!viewers.isEmpty()) {
@@ -91,6 +100,31 @@ public class ViewerService {
                     " ", viewer.getId(), viewer.getName(), viewer.getLastName(),
                     formatter.format(viewer.getBirthday()),
                     "|------|-------------------|--------------------|------------|"));
+        } else {
+            System.out.println("At your request viewers not found\n");
+        }
+    }
+
+    private void printMapWithListBirthday(Multimap<String, Viewer> dateListMap) {
+        SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+        if (!dateListMap.isEmpty()) {
+            System.out.println("|------------------------------------------------------------|");
+            System.out.printf("%-24s%-1s\n", " ", "REQUEST RESULT");
+            System.out.println("|------------------------------------------------------------|");
+            for (Map.Entry<String, Collection<Viewer>> mapDate : dateListMap.asMap().entrySet()) {
+                System.out.printf("%-2s%-39s%-1s\n%-1s\n", " ",
+                        "LIST OF VIEWERS WHO HAVE A BIRTHDAY ON ", mapDate.getKey(),
+                        "|------------------------------------------------------------|");
+                for (Viewer viewer : mapDate.getValue()) {
+                    System.out.printf("%-3s%-10s%-21s%-17s%-1s\n%-1s\n", " ",
+                            "ID", "FIRST NAME", "LAST NAME", "BIRTHDAY",
+                            "|------|-------------------|--------------------|------------|");
+                    System.out.printf("%-3s%-6s%-20s%-21s%-1s\n%-1s\n",
+                            " ", viewer.getId(), viewer.getName(), viewer.getLastName(),
+                            formatter.format(viewer.getBirthday()),
+                            "|------|-------------------|--------------------|------------|");
+                }
+            }
         } else {
             System.out.println("At your request viewers not found\n");
         }

@@ -3,11 +3,16 @@ package com.abseliamov.cinema.dao;
 import com.abseliamov.cinema.model.Role;
 import com.abseliamov.cinema.model.Viewer;
 import com.abseliamov.cinema.utils.ConnectionUtil;
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.Multimap;
 
 import java.sql.*;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 public class ViewerDaoImpl extends AbstractDao<Viewer> {
     Connection connection = ConnectionUtil.getConnection();
@@ -116,6 +121,26 @@ public class ViewerDaoImpl extends AbstractDao<Viewer> {
             e.printStackTrace();
         }
         return viewers;
+    }
+
+    public Multimap<String, Viewer> searchDateWithSeveralViewersBirthday() {
+        Multimap<String, Viewer> dateListMap = ArrayListMultimap.create();
+        try (Statement statement = connection.createStatement();
+             ResultSet resultSet = statement.executeQuery("" +
+                     " SELECT *, COUNT(*), DATE_FORMAT(birthday, '%m-%d') AS date_month FROM viewers " +
+                     " GROUP BY date_month HAVING COUNT(date_month) > 5 " +
+                     " ")) {
+            while (resultSet.next()) {
+                if (resultSet.getLong("id") != 0) {
+                    dateListMap.put(resultSet.getDate("birthday").toLocalDate()
+                                    .format(DateTimeFormatter.ofPattern("EEEE d MMMM")).toUpperCase(),
+                            createMovieByRequest(resultSet));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return dateListMap;
     }
 
     private Viewer createMovieByRequest(ResultSet resultSet) throws SQLException {

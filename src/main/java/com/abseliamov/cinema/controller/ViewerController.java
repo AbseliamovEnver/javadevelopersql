@@ -2,6 +2,7 @@ package com.abseliamov.cinema.controller;
 
 import com.abseliamov.cinema.model.Viewer;
 import com.abseliamov.cinema.service.ViewerService;
+import com.google.common.collect.Multimap;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -31,5 +32,9 @@ public class ViewerController {
 
     public List<Viewer> searchViewerByComplexQuery(long genreId, double amount, List<LocalDate> dates) {
         return viewerService.searchViewerByComplexQuery(genreId, amount, dates);
+    }
+
+    public Multimap<String, Viewer> searchDateWithSeveralViewersBirthday() {
+        return viewerService.searchDateWithSeveralViewersBirthday();
     }
 }

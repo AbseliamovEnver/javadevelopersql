@@ -190,6 +190,7 @@ public class ViewerMenu {
                     requestMenuItem = -1;
                     break;
                 case 6:
+                    viewerController.searchDateWithSeveralViewersBirthday();
                     requestMenuItem = -1;
                     break;
                 default:
