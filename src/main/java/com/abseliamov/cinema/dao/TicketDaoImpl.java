@@ -93,6 +93,22 @@ public class TicketDaoImpl extends AbstractDao<Ticket> {
         return ticketList;
     }
 
+    public List<Ticket> getAllDate() {
+        List<Ticket> ticketList = new ArrayList<>();
+        try (PreparedStatement statement = connection
+                .prepareStatement("SELECT * FROM tickets WHERE date_time >= CURRENT_TIME() " +
+                        " AND buy_status = 0")) {
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                ticketList.add(createEntity(resultSet));
+            }
+        } catch (SQLException e) {
+            System.out.println(e);
+            throw new ConnectionException(e);
+        }
+        return ticketList;
+    }
+
     public List<Ticket> getTicketBySeatType(long seatTypeId) {
         List<Ticket> ticketList = new ArrayList<>();
         try (PreparedStatement statement = connection

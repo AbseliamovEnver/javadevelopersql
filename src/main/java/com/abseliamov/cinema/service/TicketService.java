@@ -83,7 +83,7 @@ public class TicketService {
 
     public Map<LocalDate, Long> getAllDate() {
         Map<LocalDate, Long> dateMap = new TreeMap<>();
-        List<Ticket> ticketList = ticketDao.getAll();
+        List<Ticket> ticketList = ticketDao.getAllDate();
         if (ticketList != null) {
             for (Ticket ticket : ticketList) {
                 dateMap.put(ticket.getDateTime().toLocalDate(), ticket.getId());
