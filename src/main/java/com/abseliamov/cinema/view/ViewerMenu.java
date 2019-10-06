@@ -7,6 +7,7 @@ import com.abseliamov.cinema.model.Viewer;
 import com.abseliamov.cinema.utils.CurrentViewer;
 import com.abseliamov.cinema.utils.IOUtil;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
@@ -280,7 +281,7 @@ public class ViewerMenu {
             if (ticketConfirm == 0) {
                 return buyExist;
             } else if (ticketId == ticketConfirm) {
-                if (ticketController.buyTicket(ticketId) && movieController.increaseCostMovie(ticket.getPrice(),
+                if (ticketController.buyTicket(ticketId) && movieController.increaseCostMovie(BigDecimal.valueOf(ticket.getPrice()),
                         ticket.getMovie())) {
                     System.out.println("Thanks for your purchase\n");
                     buyExist = true;
@@ -314,7 +315,7 @@ public class ViewerMenu {
             if (ticketId != 0 && (ticket = ticketController.getOrderedTicketById(ticketId)) != null) {
                 long ticketConfirm = IOUtil.readNumber("\nEnter ticket ID to confirm return the ticket or \'0\' to return: ");
                 if (ticketId == ticketConfirm && ticketController.returnTicket(ticketId)
-                        && movieController.reduceCostMovie(ticket.getPrice(), ticket.getMovie())) {
+                        && movieController.reduceCostMovie(BigDecimal.valueOf(ticket.getPrice()), ticket.getMovie())) {
                     returnExist = true;
                     System.out.println("Ticket returned.\n");
                 } else {

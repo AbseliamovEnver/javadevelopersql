@@ -11,7 +11,7 @@ CREATE TABLE movies(
     id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
     genre_id INT UNSIGNED NOT NULL,
-    cost DOUBLE,
+    cost DECIMAL,
 FOREIGN KEY (genre_id) REFERENCES genres(id)
 );
 
@@ -34,8 +34,8 @@ CREATE TABLE roles(
 
 CREATE TABLE viewers(
     id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    firstName VARCHAR(100) NOT NULL,
-    lastName VARCHAR(100) NOT NULL,
+    first_name VARCHAR(100) NOT NULL,
+    last_name VARCHAR(100) NOT NULL,
     password VARCHAR(100) NOT NULL,
     role_id INT UNSIGNED NOT NULL,
     birthday DATE NOT NULL,

@@ -1,16 +1,18 @@
 package com.abseliamov.cinema.model;
 
+import java.math.BigDecimal;
+
 public class Movie extends GenericModel {
     private Genre genre;
-    private double cost;
+    private BigDecimal cost;
 
-    public Movie(long id, String name, Genre genre, double cost) {
+    public Movie(long id, String name, Genre genre, BigDecimal cost) {
         super(id, name);
         this.genre = genre;
         this.cost = cost;
     }
 
-    public Movie(long id, String name, double totalPrice) {
+    public Movie(long id, String name, BigDecimal totalPrice) {
         super(id, name);
         this.cost = totalPrice;
     }
@@ -23,11 +25,11 @@ public class Movie extends GenericModel {
         this.genre = genre;
     }
 
-    public double getCost() {
+    public BigDecimal getCost() {
         return cost;
     }
 
-    public void setCost(double cost) {
+    public void setCost(BigDecimal cost) {
         this.cost = cost;
     }
 

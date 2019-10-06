@@ -23,7 +23,7 @@ public class MovieDaoImpl extends AbstractDao<Movie> {
                 resultSet.getLong("id"),
                 resultSet.getString("name"),
                 genreDao.getById(resultSet.getLong("genre_id")),
-                resultSet.getDouble("cost"));
+                resultSet.getBigDecimal("cost"));
     }
 
     @Override
@@ -31,7 +31,7 @@ public class MovieDaoImpl extends AbstractDao<Movie> {
         boolean updateExist = false;
         try (PreparedStatement statement = connection
                 .prepareStatement("UPDATE movies SET cost = ? WHERE id = ?")) {
-            statement.setDouble(1, movie.getCost());
+            statement.setBigDecimal(1, movie.getCost());
             statement.setLong(2, id);
             statement.executeUpdate();
             updateExist = true;
@@ -50,14 +50,14 @@ public class MovieDaoImpl extends AbstractDao<Movie> {
         List<Movie> movies = new ArrayList<>();
         try (Statement statement = connection.createStatement();
              ResultSet resultSet = statement.executeQuery("" +
-                     "SELECT movies.id, movies.name, moviePrice.totalPrice FROM (" +
+                     "SELECT movies.id, movies.name, movie_price.total_price FROM (" +
                      "    SELECT movie_id FROM tickets WHERE (QUARTER(date_time) = QUARTER(CURDATE()))) AS date " +
                      "RIGHT JOIN (" +
-                     "    SELECT movie_id AS moviePriceId, SUM(price) AS totalPrice FROM tickets WHERE buy_status > 0 " +
-                     "      GROUP BY movie_id HAVING MAX(totalPrice) LIMIT 1) AS moviePrice " +
-                     "ON date.movie_id = moviePrice.moviePriceId " +
+                     "    SELECT movie_id AS movie_price_id, SUM(price) AS total_price FROM tickets WHERE buy_status > 0 " +
+                     "      GROUP BY movie_id ORDER BY total_price DESC LIMIT 1) AS movie_price " +
+                     "ON date.movie_id = movie_price.movie_price_id " +
                      "INNER JOIN movies " +
-                     "ON movies.id = moviePrice.moviePriceId LIMIT 1")) {
+                     "ON movies.id = movie_price.movie_price_id LIMIT 1")) {
             while (resultSet.next()) {
                 movies.add(createMovieByRequest(resultSet));
             }
@@ -71,14 +71,14 @@ public class MovieDaoImpl extends AbstractDao<Movie> {
         List<Movie> movies = new ArrayList<>();
         try (Statement statement = connection.createStatement();
              ResultSet resultSet = statement.executeQuery("" +
-                     "SELECT movies.id, movies.name, moviePrice.totalPrice FROM (" +
+                     "SELECT movies.id, movies.name, movie_price.total_price FROM (" +
                      "    SELECT movie_id FROM tickets WHERE (QUARTER(date_time) = QUARTER(CURDATE()))) AS date " +
                      "RIGHT JOIN (" +
-                     "    SELECT movie_id AS moviePriceId, SUM(price) AS totalPrice FROM tickets WHERE buy_status > 0 " +
-                     "      GROUP BY movie_id ORDER BY movie_id DESC LIMIT 1) AS moviePrice " +
-                     "ON date.movie_id = moviePrice.moviePriceId " +
+                     "    SELECT movie_id AS movie_price_id, SUM(price) AS total_price FROM tickets WHERE buy_status > 0 " +
+                     "      GROUP BY movie_id ORDER BY total_price LIMIT 1) AS movie_price " +
+                     "ON date.movie_id = movie_price.movie_price_id " +
                      "INNER JOIN movies " +
-                     "ON movies.id = moviePrice.moviePriceId LIMIT 1")) {
+                     "ON movies.id = movie_price.movie_price_id LIMIT 1")) {
             while (resultSet.next()) {
                 movies.add(createMovieByRequest(resultSet));
             }
@@ -92,6 +92,6 @@ public class MovieDaoImpl extends AbstractDao<Movie> {
         return new Movie(
                 resultSet.getLong("id"),
                 resultSet.getString("name"),
-                resultSet.getDouble("totalPrice"));
+                resultSet.getBigDecimal("total_price"));
     }
 }

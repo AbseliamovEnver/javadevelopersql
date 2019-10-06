@@ -69,35 +69,49 @@ INSERT INTO roles(role) VALUES
 ('ADMIN'),
 ('USER');
 
-INSERT INTO viewers(firstName, lastName, password, role_id, birthday) VALUES
+INSERT INTO viewers(first_name, last_name, password, role_id, birthday) VALUES
 ('123', 'Ivanov', '123', 1, STR_TO_DATE('01-02-2019', '%d-%m-%Y')),
 ('root', 'Petrov', 'root', 1, STR_TO_DATE('02-03-2000', '%d-%m-%Y')),
-('user', 'User', 'user', 1, STR_TO_DATE('05-10-2019', '%d-%m-%Y')),
-('admin', 'Sidorov', 'admin', 1, STR_TO_DATE('01-01-1970', '%d-%m-%Y'));
+('admin', 'Sidorov', 'admin', 1, STR_TO_DATE('01-01-1970', '%d-%m-%Y')),
+('user', 'User', 'user', 2, STR_TO_DATE('07-10-2010', '%d-%m-%Y')),
+('user1', 'User1', 'user1', 2, STR_TO_DATE('07-10-2018', '%d-%m-%Y')),
+('user2', 'User2', 'user2', 2, STR_TO_DATE('07-10-2017', '%d-%m-%Y')),
+('user3', 'User3', 'user3', 2, STR_TO_DATE('07-10-2016', '%d-%m-%Y')),
+('user4', 'User4', 'user4', 2, STR_TO_DATE('07-10-2015', '%d-%m-%Y')),
+('user5', 'User5', 'user5', 2, STR_TO_DATE('07-10-2014', '%d-%m-%Y')),
+('user6', 'User6', 'user6', 2, STR_TO_DATE('07-10-2013', '%d-%m-%Y')),
+('user7', 'User7', 'user7', 2, STR_TO_DATE('07-10-2012', '%d-%m-%Y')),
+('user8', 'User8', 'user8', 2, STR_TO_DATE('07-10-2012', '%d-%m-%Y')),
+('admin1', 'Admin1', 'admin1', 1, STR_TO_DATE('01-01-2012', '%d-%m-%Y')),
+('admin2', 'Admin2', 'admin2', 1, STR_TO_DATE('01-01-2013', '%d-%m-%Y')),
+('admin3', 'Admin3', 'admin3', 1, STR_TO_DATE('01-01-2014', '%d-%m-%Y')),
+('admin4', 'Admin4', 'admin4', 1, STR_TO_DATE('01-01-2015', '%d-%m-%Y')),
+('admin5', 'Admin5', 'admin5', 1, STR_TO_DATE('01-01-2016', '%d-%m-%Y')),
+('admin6', 'Admin6', 'admin6', 1, STR_TO_DATE('09-10-2010', '%d-%m-%Y'));
 
 INSERT INTO tickets(date_time, movie_id, seat_id, price, buy_status) VALUES
-(STR_TO_DATE('03-11-2019 09:00:00', '%d-%m-%Y %H:%i:%s'), 1, 1, 5.5, 0),
-(STR_TO_DATE('03-11-2019 09:00:00', '%d-%m-%Y %H:%i:%s'), 1, 2, 5.5, 0),
-(STR_TO_DATE('03-11-2019 09:00:00', '%d-%m-%Y %H:%i:%s'), 1, 3, 5.5, 0),
-(STR_TO_DATE('03-11-2019 09:00:00', '%d-%m-%Y %H:%i:%s'), 1, 4, 3.5, 0),
-(STR_TO_DATE('03-11-2019 09:00:00', '%d-%m-%Y %H:%i:%s'), 1, 5, 3.5, 0),
-(STR_TO_DATE('03-11-2019 09:00:00', '%d-%m-%Y %H:%i:%s'), 1, 6, 3.5, 0),
+(STR_TO_DATE('14-10-2019 09:00:00', '%d-%m-%Y %H:%i:%s'), 1, 1, 5.5, 1),
+(STR_TO_DATE('14-10-2019 09:00:00', '%d-%m-%Y %H:%i:%s'), 1, 2, 5.5, 1),
+(STR_TO_DATE('14-10-2019 09:00:00', '%d-%m-%Y %H:%i:%s'), 1, 3, 5.5, 1),
+(STR_TO_DATE('01-10-2019 09:00:00', '%d-%m-%Y %H:%i:%s'), 1, 4, 3.5, 1),
+(STR_TO_DATE('01-10-2019 09:00:00', '%d-%m-%Y %H:%i:%s'), 1, 5, 3.5, 1),
+(STR_TO_DATE('01-10-2019 09:00:00', '%d-%m-%Y %H:%i:%s'), 1, 6, 3.5, 1),
 
-(STR_TO_DATE('03-11-2019 11:00:00', '%d-%m-%Y %H:%i:%s'), 2, 1, 6.0, 0),
+(STR_TO_DATE('03-11-2019 11:00:00', '%d-%m-%Y %H:%i:%s'), 2, 1, 6.0, 2),
 (STR_TO_DATE('03-11-2019 11:00:00', '%d-%m-%Y %H:%i:%s'), 2, 2, 6.0, 0),
-(STR_TO_DATE('03-11-2019 11:00:00', '%d-%m-%Y %H:%i:%s'), 2, 3, 6.0, 0),
+(STR_TO_DATE('03-11-2019 11:00:00', '%d-%m-%Y %H:%i:%s'), 2, 3, 6.0, 1),
 (STR_TO_DATE('03-11-2019 11:00:00', '%d-%m-%Y %H:%i:%s'), 2, 4, 4.0, 0),
 (STR_TO_DATE('03-11-2019 11:00:00', '%d-%m-%Y %H:%i:%s'), 2, 5, 4.0, 0),
 (STR_TO_DATE('03-11-2019 11:00:00', '%d-%m-%Y %H:%i:%s'), 2, 6, 4.0, 0),
 
-(STR_TO_DATE('04-11-2019 13:00:00', '%d-%m-%Y %H:%i:%s'), 3, 3, 4.0, 0),
-(STR_TO_DATE('05-11-2019 15:00:00', '%d-%m-%Y %H:%i:%s'), 4, 4, 3.5, 0),
-(STR_TO_DATE('06-11-2019 17:00:00', '%d-%m-%Y %H:%i:%s'), 5, 5, 3.5, 0),
-(STR_TO_DATE('07-11-2019 19:00:00', '%d-%m-%Y %H:%i:%s'), 6, 6, 3.5, 0),
+(STR_TO_DATE('09-10-2019 13:00:00', '%d-%m-%Y %H:%i:%s'), 3, 3, 4.0, 18),
+(STR_TO_DATE('05-11-2019 15:00:00', '%d-%m-%Y %H:%i:%s'), 6, 4, 3.5, 2),
+(STR_TO_DATE('06-11-2019 17:00:00', '%d-%m-%Y %H:%i:%s'), 6, 6, 3.5, 2),
+(STR_TO_DATE('07-11-2019 19:00:00', '%d-%m-%Y %H:%i:%s'), 6, 5, 3.5, 1),
 
-(STR_TO_DATE('08-11-2019 09:00:00', '%d-%m-%Y %H:%i:%s'), 3, 1, 5.5, 0),
-(STR_TO_DATE('04-11-2019 11:00:00', '%d-%m-%Y %H:%i:%s'), 4, 2, 5.5, 0),
-(STR_TO_DATE('04-11-2019 13:00:00', '%d-%m-%Y %H:%i:%s'), 5, 3, 5.5, 0),
-(STR_TO_DATE('04-11-2019 15:00:00', '%d-%m-%Y %H:%i:%s'), 6, 4, 3.5, 0),
-(STR_TO_DATE('04-11-2019 17:00:00', '%d-%m-%Y %H:%i:%s'), 2, 5, 3.5, 0),
-(STR_TO_DATE('04-11-2019 19:00:00', '%d-%m-%Y %H:%i:%s'), 4, 6, 3.5, 0);
+(STR_TO_DATE('08-11-2019 09:00:00', '%d-%m-%Y %H:%i:%s'), 6, 1, 5.5, 2),
+(STR_TO_DATE('07-10-2019 11:00:00', '%d-%m-%Y %H:%i:%s'), 6, 2, 5.5, 4),
+(STR_TO_DATE('04-11-2019 13:00:00', '%d-%m-%Y %H:%i:%s'), 6, 3, 5.5, 2),
+(STR_TO_DATE('04-11-2019 15:00:00', '%d-%m-%Y %H:%i:%s'), 6, 4, 3.5, 2),
+(STR_TO_DATE('04-11-2019 17:00:00', '%d-%m-%Y %H:%i:%s'), 6, 5, 3.5, 2),
+(STR_TO_DATE('04-11-2019 19:00:00', '%d-%m-%Y %H:%i:%s'), 6, 6, 3.5, 2);

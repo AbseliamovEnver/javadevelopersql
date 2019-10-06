@@ -3,6 +3,7 @@ package com.abseliamov.cinema.service;
 import com.abseliamov.cinema.dao.MovieDaoImpl;
 import com.abseliamov.cinema.model.Movie;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public class MovieService {
@@ -12,15 +13,15 @@ public class MovieService {
         this.movieDao = movieDao;
     }
 
-    public boolean increaseCostMovie(double ticketCost, Movie movie) {
+    public boolean increaseCostMovie(BigDecimal ticketCost, Movie movie) {
         long movieId = movie.getId();
-        Movie newMovie = new Movie(movieId, movie.getName(), movie.getGenre(), movie.getCost() + ticketCost);
+        Movie newMovie = new Movie(movieId, movie.getName(), movie.getGenre(), (movie.getCost()).add(ticketCost));
         return movieDao.update(movieId, newMovie);
     }
 
-    public boolean reduceCostMovie(double ticketCost, Movie movie) {
+    public boolean reduceCostMovie(BigDecimal ticketCost, Movie movie) {
         long movieId = movie.getId();
-        Movie newMovie = new Movie(movieId, movie.getName(), movie.getGenre(), movie.getCost() - ticketCost);
+        Movie newMovie = new Movie(movieId, movie.getName(), movie.getGenre(), movie.getCost().subtract(ticketCost));
         return movieDao.update(movieId, newMovie);
     }
 

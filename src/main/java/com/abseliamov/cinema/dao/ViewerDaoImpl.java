@@ -30,8 +30,8 @@ public class ViewerDaoImpl extends AbstractDao<Viewer> {
             }
         }
         return new Viewer(resultSet.getLong("id"),
-                resultSet.getString("firstName"),
-                resultSet.getString("lastName"),
+                resultSet.getString("first_name"),
+                resultSet.getString("last_name"),
                 resultSet.getString("password"),
                 role,
                 resultSet.getDate("birthday"));
@@ -58,7 +58,7 @@ public class ViewerDaoImpl extends AbstractDao<Viewer> {
     public List<Viewer> searchViewerMovieCountByGenre(long genreId) {
         List<Viewer> viewers = new ArrayList<>();
         try (PreparedStatement statement = connection.prepareStatement("" +
-                "SELECT viewers.id, viewers.firstName, viewers.lastName, viewers.birthday, COUNT(buy_status) FROM (" +
+                "SELECT viewers.id, viewers.first_name, viewers.last_name, viewers.birthday, COUNT(buy_status) FROM (" +
                 "    SELECT buy_status FROM tickets WHERE (QUARTER(date_time) = QUARTER(CURDATE())) " +
                 "      AND movie_id IN (SELECT id FROM movies WHERE  genre_id = ?)" +
                 "      AND buy_status <> 0 " +
@@ -82,10 +82,12 @@ public class ViewerDaoImpl extends AbstractDao<Viewer> {
         List<Viewer> viewers = new ArrayList<>();
         try (Statement statement = connection.createStatement();
              ResultSet resultSet = statement.executeQuery("" +
-                     " SELECT viewers.id, viewers.firstName, viewers.lastName, viewers.birthday FROM tickets, viewers " +
-                     "    WHERE tickets.date_time >= CURRENT_TIME AND buy_status <> 0 " +
-                     "      AND (DAYOFYEAR(date_time) BETWEEN (DAYOFYEAR(birthday) - 3) AND DAYOFYEAR(birthday) " +
-                     "      OR DAYOFYEAR(date_time) BETWEEN DAYOFYEAR(birthday) AND (DAYOFYEAR(birthday) + 3 )) ")) {
+                     "SELECT viewers.id, viewers.first_name, viewers.last_name, viewers.birthday " +
+                     "FROM viewers " +
+                     "INNER JOIN tickets ON viewers.id = tickets.buy_status " +
+                     "    AND date_time >= CURRENT_TIME AND buy_status <> 0 " +
+                     "    AND (DAYOFYEAR(date_time) BETWEEN (DAYOFYEAR(birthday) - 3) AND DAYOFYEAR(birthday) " +
+                     "        OR DAYOFYEAR(date_time) BETWEEN DAYOFYEAR(birthday) AND (DAYOFYEAR(birthday) + 3 ))")) {
             while (resultSet.next()) {
                 if (resultSet.getLong("id") != 0) {
                     viewers.add(createMovieByRequest(resultSet));
@@ -100,7 +102,7 @@ public class ViewerDaoImpl extends AbstractDao<Viewer> {
     public List<Viewer> searchViewerByComplexQuery(long genreId, double amount, List<LocalDate> dates) {
         List<Viewer> viewers = new ArrayList<>();
         try (PreparedStatement statement = connection.prepareStatement("" +
-                " SELECT viewers.id, viewers.firstName, viewers.lastName, viewers.birthday FROM ( " +
+                " SELECT viewers.id, viewers.first_name, viewers.last_name, viewers.birthday FROM ( " +
                 "SELECT buy_status FROM tickets WHERE movie_id IN (SELECT id FROM movies WHERE  genre_id = ?) " +
                 "AND buy_status <> 0 " +
                 "AND date_time BETWEEN ? AND ? " +
@@ -146,8 +148,8 @@ public class ViewerDaoImpl extends AbstractDao<Viewer> {
     private Viewer createMovieByRequest(ResultSet resultSet) throws SQLException {
         return new Viewer(
                 resultSet.getLong("id"),
-                resultSet.getString("firstname"),
-                resultSet.getString("lastname"),
+                resultSet.getString("first_name"),
+                resultSet.getString("last_name"),
                 resultSet.getDate("birthday"));
     }
 }
